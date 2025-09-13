@@ -1,10 +1,8 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "base.html" %} {% load static %} {% block title %}Resumes -
+JobJourney{% endblock %} {% block content %}
 
-{% block title %}Resumes - JobJourney{% endblock %}
-
-{% block content %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <div class="page">
   <!-- ===== Left Panel ===== -->
@@ -21,13 +19,14 @@
 
     <!-- Resume Cards -->
     {% for resume in resumes %}
-    <div class="resume-card {% if resume.status == 'Active' %}active{% endif %}">
+    <div
+      class="resume-card {% if resume.status == 'Active' %}active{% endif %}">
       <h3>{{ resume.name }}</h3>
       <div class="meta">Last Modified: {{ resume.updated }}</div>
       <div class="meta">Status: {{ resume.status }}</div>
 
       {% if resume.status == "Active" %}
-        <span class="badge">Active</span>
+      <span class="badge">Active</span>
       {% endif %}
 
       <div class="actions">
@@ -35,7 +34,7 @@
         <button title="Download">⬇️</button>
         <button title="Delete">🗑️</button>
         {% if resume.status != "Active" %}
-          <button class="set-active">Set Active</button>
+        <button class="set-active">Set Active</button>
         {% endif %}
       </div>
     </div>
@@ -43,10 +42,12 @@
   </div>
 
   <!-- ===== Right Panel (Preview) ===== -->
-  <div class="preview-panel">
+  <div class="preview-panel" id="preview-panel">
     <div class="preview-header">
       <h2>Resume Preview</h2>
-      <button>⬇ Download as PDF</button>
+      <button id="download-pdf" data-html2canvas-ignore>
+        ⬇ Download as PDF
+      </button>
     </div>
     <hr />
 
@@ -63,7 +64,13 @@
     <div class="section">
       <h3>Summary</h3>
       <div class="content">
-        <p>Highly motivated and results-oriented Marketing Manager with 7+ years of experience driving successful campaigns, enhancing brand presence, and increasing market share. Proven ability to lead cross-functional teams, develop innovative strategies, and deliver measurable results in fast-paced environments.</p>
+        <p>
+          Highly motivated and results-oriented Marketing Manager with 7+ years
+          of experience driving successful campaigns, enhancing brand presence,
+          and increasing market share. Proven ability to lead cross-functional
+          teams, develop innovative strategies, and deliver measurable results
+          in fast-paced environments.
+        </p>
       </div>
     </div>
 
@@ -72,22 +79,41 @@
       <h3>Experience</h3>
       <div class="content">
         <div class="job">
-          <p class="job-title">Senior Marketing Manager at Innovate Solutions</p>
+          <p class="job-title">
+            Senior Marketing Manager at Innovate Solutions
+          </p>
           <p class="job-meta">San Francisco, CA | Jan 2021 – Present</p>
           <ul>
-            <li>Led a team of 5 marketing specialists, overseeing all aspects of digital and traditional campaigns.</li>
-            <li>Increased lead generation by 35% through targeted content and SEO strategies.</li>
-            <li>Managed $1M annual budget, consistently delivering projects under budget.</li>
-            <li>Collaborated with product development to launch 3 new products, contributing to a 20% revenue increase.</li>
+            <li>
+              Led a team of 5 marketing specialists, overseeing all aspects of
+              digital and traditional campaigns.
+            </li>
+            <li>
+              Increased lead generation by 35% through targeted content and SEO
+              strategies.
+            </li>
+            <li>
+              Managed $1M annual budget, consistently delivering projects under
+              budget.
+            </li>
+            <li>
+              Collaborated with product development to launch 3 new products,
+              contributing to a 20% revenue increase.
+            </li>
           </ul>
         </div>
         <div class="job">
           <p class="job-title">Marketing Specialist at Growth Dynamics</p>
           <p class="job-meta">New York, NY | Aug 2017 – Dec 2020</p>
           <ul>
-            <li>Executed social media campaigns, growing follower count by 50%.</li>
+            <li>
+              Executed social media campaigns, growing follower count by 50%.
+            </li>
             <li>Analyzed market trends to identify new opportunities.</li>
-            <li>Created compelling collateral including presentations and brochures.</li>
+            <li>
+              Created compelling collateral including presentations and
+              brochures.
+            </li>
           </ul>
         </div>
       </div>
@@ -97,7 +123,9 @@
     <div class="section education">
       <h3>Education</h3>
       <div class="content">
-        <p class="degree">Master of Business Administration (MBA), UC Berkeley</p>
+        <p class="degree">
+          Master of Business Administration (MBA), UC Berkeley
+        </p>
         <p>Sep 2019 – May 2021</p>
         <p class="degree">B.S. in Marketing, New York University</p>
         <p>Sep 2013 – May 2017 • GPA: 3.84</p>
@@ -110,11 +138,16 @@
       <div class="content skills-grid">
         <div>
           <p><strong>Digital Marketing:</strong></p>
-          <p>SEO/SEM, Content Marketing, Social Media, Email Marketing, Google Analytics</p>
+          <p>
+            SEO/SEM, Content Marketing, Social Media, Email Marketing, Google
+            Analytics
+          </p>
         </div>
         <div>
           <p><strong>Strategy & Management:</strong></p>
-          <p>Campaign Management, Brand Strategy, Leadership, Market Research</p>
+          <p>
+            Campaign Management, Brand Strategy, Leadership, Market Research
+          </p>
         </div>
         <div>
           <p><strong>Software & Tools:</strong></p>
@@ -127,13 +160,41 @@
     <div class="section projects">
       <h3>Projects</h3>
       <div class="content">
-        <p><strong>Website Redesign & Relaunch</strong><br>
-        Managed complete redesign of company site, improving UX and boosting organic traffic by 40%.</p>
+        <p>
+          <strong>Website Redesign & Relaunch</strong><br />
+          Managed complete redesign of company site, improving UX and boosting
+          organic traffic by 40%.
+        </p>
         <a href="#">View Project</a>
-        <p><strong>Quarterly Marketing Report Automation</strong><br>
-        Built automated system for quarterly reporting, reducing manual effort by 70%.</p>
+        <p>
+          <strong>Quarterly Marketing Report Automation</strong><br />
+          Built automated system for quarterly reporting, reducing manual effort
+          by 70%.
+        </p>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById("download-pdf").addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("p", "pt", "a4"); // portrait, points, A4 size
+
+    const element = document.getElementById("preview-panel");
+
+    // make it crisp with scale: 2
+    html2canvas(element, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const imgProps = doc.getImageProperties(imgData);
+
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      doc.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      doc.save("applications.pdf");
+    });
+  });
+</script>
+
 {% endblock %}
