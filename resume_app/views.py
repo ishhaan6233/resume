@@ -27,3 +27,35 @@ def applications(request):
         {"company": "Cloud Solutions Ltd.", "position": "Cloud Architect", "date": "Jul 12, 2024", "status": "Applied"},
     ]
     return render(request, "applications.html", {"applications": applications_list})
+
+
+def resumes(request):
+    resumes_list = [
+        {
+            "id": 1,
+            "name": "Master Resume",
+            "created": "Jul 01, 2024",
+            "updated": "Jul 20, 2024",
+            "is_master": True,
+        },
+        {
+            "id": 2,
+            "name": "Software Engineer Resume",
+            "created": "Jul 05, 2024",
+            "updated": "Jul 18, 2024",
+            "is_master": False,
+        },
+        {
+            "id": 3,
+            "name": "Data Scientist Resume",
+            "created": "Jul 08, 2024",
+            "updated": "Jul 15, 2024",
+            "is_master": False,
+        },
+    ]
+
+    context = {
+        "resumes": resumes_list,
+        "page_title": "Resumes",
+    }
+    return render(request, "resumes.html", context)

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}JobJourney{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" href="{% static 'resumes.css'%}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,7 +21,7 @@
       <ul class="nav-links">
         <li><a href="{% url 'home' %}">Dashboard</a></li>
         <li><a href="{% url 'applications' %}">Applications</a></li>
-        <li><a href="#">Resumes</a></li>
+        <li><a href="{% url 'resumes' %}">Resumes</a></li>
         <li><a href="#">Responses</a></li>
         <li><a href="#">Settings</a></li>
       </ul>
