@@ -21,3 +21,18 @@ class Resume(models.Model):
     education = models.TextField()
     skills = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+# Model for the new job application form
+class JobApplication(models.Model):
+    company = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    url = models.URLField(blank=True, null=True)
+    date_applied = models.DateField()
+    status = models.CharField(max_length=20, choices=[
+        ("Applied", "Applied"),
+        ("Interview", "Interview"),
+        ("Offer", "Offer"),
+        ("Rejected", "Rejected"),
+    ])
+    notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)

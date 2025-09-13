@@ -42,3 +42,28 @@ def add_application(request):
         return redirect("applications")
 
     return render(request, "add_applications.html")
+
+
+# Enhanced applications view with search and filter
+def applications_view(request):
+    active_filter = request.GET.get('status', 'all')
+    search_query = request.GET.get('search', '').strip()
+
+    apps = Application.objects.all()
+
+    if active_filter != 'all':
+        apps = apps.filter(status=active_filter)
+
+    if search_query:
+        apps = apps.filter(
+            company__icontains=search_query
+        ) | apps.filter(
+            position__icontains=search_query
+        )
+
+    context = {
+        'applications': apps,
+        'active_filter': active_filter,
+        'search_query': search_query
+    }
+    return render(request, 'applications.html', context)
