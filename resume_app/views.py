@@ -27,3 +27,9 @@ def applications(request):
         {"company": "Cloud Solutions Ltd.", "position": "Cloud Architect", "date": "Jul 12, 2024", "status": "Applied"},
     ]
     return render(request, "applications.html", {"applications": applications_list})
+
+def responses(request):
+    responses_list = [
+        {"company": "a", "position": "b", "type": "c", "date": "x", "notes": "b", "next_action": "idk"},
+    ]
+    return render(request, "responses.html", {"responses": responses_list})
