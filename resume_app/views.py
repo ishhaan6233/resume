@@ -31,7 +31,6 @@ def responses(request):
     ]
     return render(request, "responses.html", {"responses": responses_list})
 
-
 def resumes(request):
     resumes_list = [
         {
