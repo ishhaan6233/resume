@@ -327,3 +327,23 @@ footer {
   color: #2a6df4;
 }
 
+/* Make the whole page stretch to full height */
+html, body {
+  height: 100%;
+}
+
+/* Page layout: flexbox */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content area grows to push footer down */
+main {
+  flex: 1;
+}
+
+/* Footer fixed at bottom when content is short */
+footer {
+  margin-top: auto;
+}
