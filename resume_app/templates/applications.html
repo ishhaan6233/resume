@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title %}Applications - JobJourney{%
+endblock%} {% block content %}
+<h1>Job Applications</h1>
+
+<!-- Action bar -->
+<div class="actions">
+  <a href="#" class="btn">+ Add New Application</a>
+  <input type="text" class="search" placeholder="Search applications..." />
+</div>
+
+<!-- Applications Table -->
+<table>
+  <thead>
+    <tr
+      <th>Company</th>
+      <th>Position</th>
+      <th>Date Applied</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for app in applications %}
+    <tr>
+      <td>{{ app.company }}</td>
+      <td>{{ app.position }}</td>
+      <td>{{ app.date }}</td>
+      <td>
+        <span class="status {{ app.status }}">{{ app.status }}</span>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4">No applications yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
