@@ -1,0 +1,159 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f8f9fc;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #2a6df4;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.profile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: url('https://via.placeholder.com/40') no-repeat center/cover;
+}
+
+/* Greeting */
+.greeting {
+  padding: 2rem;
+  background: #eef3fb;
+}
+
+.greeting h1 {
+  margin: 0.5rem 0 0;
+}
+
+/* Overview Cards */
+.overview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.card .number {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2a6df4;
+}
+
+.card span {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* Recent Activity + Quick Actions */
+.main-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.recent-activity, .quick-actions {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.recent-activity ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recent-activity li {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.recent-activity .icon {
+  margin-right: 0.5rem;
+}
+
+.recent-activity .time {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-left: 1.5rem;
+}
+
+.quick-actions .btn {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  background: #2a6df4;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quick-actions .btn:hover {
+  background: #1f54b5;
+}
+
+/* Footer */
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+.footer-links a {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: #555;
+}
+
+.footer-icons a {
+  margin-left: 1rem;
+  text-decoration: none;
+}
