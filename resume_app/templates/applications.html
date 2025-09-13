@@ -3,18 +3,19 @@
 
 <!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" data-status="all">All</button>
-  <button class="tab" data-status="Applied">Applied</button>
-  <button class="tab" data-status="Interview">Interview</button>
-  <button class="tab" data-status="Offer">Offer</button>
-  <button class="tab" data-status="Rejected">Rejected</button>
+  <a href="{% url 'applications' %}?status=all" class="tab {% if active_filter == 'all' %}active{% endif %}">All</a>
+  <a href="{% url 'applications' %}?status=Applied" class="tab {% if active_filter == 'Applied' %}active{% endif %}">Applied</a>
+  <a href="{% url 'applications' %}?status=Interview" class="tab {% if active_filter == 'Interview' %}active{% endif %}">Interview</a>
+  <a href="{% url 'applications' %}?status=Offer" class="tab {% if active_filter == 'Offer' %}active{% endif %}">Offer</a>
+  <a href="{% url 'applications' %}?status=Rejected" class="tab {% if active_filter == 'Rejected' %}active{% endif %}">Rejected</a>
 </div>
 
 <!-- Action bar -->
 <div class="actions">
-  <a href="#" class="btn">+ Add New Application</a>
+  <a href="{% url 'add_application' %}" class="btn">+ Add New Application</a>
   <input type="text" class="search" placeholder="Search applications..." />
 </div>
+
 
 <!-- Applications Table -->
 <table class="applications-table">
