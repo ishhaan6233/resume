@@ -8,7 +8,7 @@ def home(request):
         "interviews_scheduled": JobApplication.objects.filter(status="Interview").count(),
         "offers_received": JobApplication.objects.filter(status="Offer").count(),
         "rejections": JobApplication.objects.filter(status="Rejected").count(),
-        "recent_activity": JobApplication.objects.all().order_by("-date_applied")[:4],  # last 4 apps
+        "recent_activity": JobApplication.objects.all().order_by("-created_at")[:4],  # last 4 apps
     }
     return render(request, "home.html", context)
 
