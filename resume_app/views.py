@@ -7,10 +7,10 @@ def home(request):
         "offers_received": 3,
         "rejections": 8,
         "recent_activity": [
-            {"icon": "📅", "text": "Interview scheduled with Tech Solutions for Senior Software Engineer.", "time": "2 hours ago"},
-            {"icon": "📄", "text": "Application submitted for Product Manager role at InnovateCorp.", "time": "Yesterday"},
-            {"icon": "✅", "text": "Job offer received from Global Dynamics for Data Scientist position.", "time": "3 days ago"},
-            {"icon": "📧", "text": "Follow up with HR at Marketing Pro for Account Executive role.", "time": "4 days ago"},
+            {"text": "Interview scheduled with Tech Solutions for Senior Software Engineer.", "time": "2 hours ago"},
+            {"text": "Application submitted for Product Manager role at InnovateCorp.", "time": "Yesterday"},
+            {"text": "Job offer received from Global Dynamics for Data Scientist position.", "time": "3 days ago"},
+            {"text": "Follow up with HR at Marketing Pro for Account Executive role.", "time": "4 days ago"},
         ]
     }
     return render(request, "home.html", context)
