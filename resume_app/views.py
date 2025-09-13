@@ -72,14 +72,19 @@ def add_application(request):
     if request.method == "POST":
         company = request.POST.get("company")
         position = request.POST.get("position")
-        date_applied = request.POST.get("date")
+        url = request.POST.get("url")
+        date_applied = request.POST.get("date_applied")
         status = request.POST.get("status")
+        notes = request.POST.get("notes")
 
-        Application.objects.create(
+        from .models import JobApplication
+        JobApplication.objects.create(
             company=company,
             position=position,
-            date=date_applied,
+            url=url,
+            date_applied=date_applied,
             status=status,
+            notes=notes
         )
         return redirect("applications")
 
@@ -88,10 +93,11 @@ def add_application(request):
 
 # Enhanced applications view with search and filter
 def applications_view(request):
+    from .models import JobApplication
     active_filter = request.GET.get('status', 'all')
     search_query = request.GET.get('search', '').strip()
 
-    apps = Application.objects.all()
+    apps = JobApplication.objects.all().order_by('-date_applied')
 
     if active_filter != 'all':
         apps = apps.filter(status=active_filter)

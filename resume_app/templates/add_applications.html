@@ -1,17 +1,11 @@
 {% extends "base.html" %} {% block title %}Add New Application - JobJourney{% endblock %} {% block content %}
-<div class="container">
-  <h2>Add New Job Application</h2>
-  <div class="subtitle">
-    Enter the details for a new job application you have made.
-  </div>
-
 <style>
   .centered-card {
     max-width: 600px;
     margin: 40px auto;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
     padding: 32px 32px 24px 32px;
   }
   .centered-card h2 {
@@ -31,7 +25,11 @@
     margin-bottom: 6px;
     font-weight: 500;
   }
-  input[type="text"], input[type="url"], input[type="date"], textarea, select {
+  input[type="text"],
+  input[type="url"],
+  input[type="date"],
+  textarea,
+  select {
     width: 100%;
     padding: 10px;
     border: 1px solid #d1d5db;
@@ -80,25 +78,49 @@
 </style>
 <div class="centered-card">
   <h2>Add New Job Application</h2>
-  <div class="subtitle">Enter the details for a new job application you have made.</div>
-  <form method="post">
+  <div class="subtitle">
+    Enter the details for a new job application you have made.
+  </div>
+  <form id="applicationForm" method="post">
     {% csrf_token %}
     <div class="form-group">
       <label for="company">Company Name</label>
-      <input type="text" id="company" name="company" placeholder="e.g., Acme Inc." required>
+      <input
+        type="text"
+        id="company"
+        name="company"
+        placeholder="e.g., Acme Inc."
+        required
+      />
     </div>
     <div class="form-group">
       <label for="position">Position</label>
-      <input type="text" id="position" name="position" placeholder="e.g., Senior Frontend Developer" required>
+      <input
+        type="text"
+        id="position"
+        name="position"
+        placeholder="e.g., Senior Frontend Developer"
+        required
+      />
     </div>
     <div class="form-group">
       <label for="url">Job Posting URL (Optional)</label>
-      <input type="url" id="url" name="url" placeholder="e.g., https://example.com/job-post">
+      <input
+        type="url"
+        id="url"
+        name="url"
+        placeholder="e.g., https://example.com/job-post"
+      />
     </div>
     <div class="row">
       <div class="form-group">
         <label for="date_applied">Date Applied</label>
-        <input type="date" id="date_applied" name="date_applied" value="{{ today|date:'Y-m-d' }}">
+        <input
+          type="date"
+          id="date_applied"
+          name="date_applied"
+          value="{{ today|date:'Y-m-d' }}"
+        />
       </div>
       <div class="form-group">
         <label for="status">Current Status</label>
@@ -112,41 +134,71 @@
     </div>
     <div class="form-group">
       <label for="notes">Notes (Optional)</label>
-      <textarea id="notes" name="notes" placeholder="Add any relevant notes here, e.g., recruiter contact, interview details..."></textarea>
-    </div>
-    <div class="form-actions">
-      <button type="button" class="btn btn-cancel" onclick="window.history.back()">Cancel</button>
-      <button type="submit" class="btn btn-save">Save Application</button>
-    </div>
-  </form>
-</div>
-          <option value="Rejected">Rejected</option>
-        </select>
-      </div>
-    </div>
-    <br />
-
-    <div class="form-group">
-      <label for="notes">Notes (Optional)</label>
       <textarea
         id="notes"
         name="notes"
         placeholder="Add any relevant notes here, e.g., recruiter contact, interview details..."
       ></textarea>
     </div>
-
-    <div style="display: flex; justify-content: flex-end; gap: 1rem">
-      <div class="form-actions">
-        <button
-          type="button"
-          class="btn btn-cancel"
-          onclick="window.history.back()"
-        >
-          Cancel
-        </button>
-        <button type="submit" class="btn btn-save">Save Application</button>
-      </div>
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn btn-cancel"
+        onclick="window.history.back()"
+      >
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-save">Save Application</button>
     </div>
   </form>
+  <div
+    id="popup"
+    style="
+      display: none;
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2563eb;
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 8px;
+      z-index: 1000;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    "
+  >
+    <span id="popupMsg"></span>
+  </div>
+  <script>
+    document
+      .getElementById("applicationForm")
+      .addEventListener("submit", function (e) {
+        var company = document.getElementById("company").value.trim();
+        var position = document.getElementById("position").value.trim();
+        var date_applied = document.getElementById("date_applied").value.trim();
+        var status = document.getElementById("status").value.trim();
+        if (!company || !position || !date_applied || !status) {
+          e.preventDefault();
+          showPopup("Please fill in all required fields.");
+          return false;
+        }
+      });
+    function showPopup(msg) {
+      var popup = document.getElementById("popup");
+      document.getElementById("popupMsg").textContent = msg;
+      popup.style.display = "block";
+      setTimeout(function () {
+        popup.style.display = "none";
+      }, 2200);
+    }
+    // Show success popup if redirected with ?success=1
+    window.onload = function () {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get("success") === "1") {
+        showPopup("Application submitted successfully!");
+      }
+    };
+  </script>
 </div>
 {% endblock %}
