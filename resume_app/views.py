@@ -1,6 +1,7 @@
 # Delete application
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Application, JobApplication
+from .models import Application, JobApplication, UserSettings
+from .forms import SettingsForm
 
 
 # Dashboard / Home
@@ -128,3 +129,18 @@ def delete_application(request, app_id):
     from .models import JobApplication
     JobApplication.objects.filter(id=app_id).delete()
     return redirect('applications')
+
+def settings_view(request):
+    # ensure we always have one settings row
+    settings_obj, _ = UserSettings.objects.get_or_create(pk=1)
+
+    if request.method == "POST":
+        form = SettingsForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            # simple success flash
+            return redirect("settings")
+    else:
+        form = SettingsForm(instance=settings_obj)
+
+    return render(request, "settings.html", {"form": form})

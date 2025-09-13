@@ -11,8 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </head>
   <body>
     <!-- Navbar -->
@@ -23,7 +22,7 @@
         <li><a href="{% url 'applications' %}">Applications</a></li>
         <li><a href="{% url 'resumes' %}">Resumes</a></li>
         <li><a href="{% url 'responses' %}">Responses</a></li>
-        <li><a href="#">Settings</a></li>
+        <li><a href="{% url 'settings' %}">Settings</a></li>
       </ul>
       <div class="profile">
         <img src="https://via.placeholder.com/35" style="border-radius: 50%" />

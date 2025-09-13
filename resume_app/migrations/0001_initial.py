@@ -68,4 +68,17 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
+        migrations.CreateModel(
+            name='UserSettings',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('display_name', models.CharField(default='Name', max_length=100)),
+                ('default_followup_days', models.PositiveIntegerField(default=7)),
+                ('email_notifications', models.BooleanField(default=True)),
+            ],
+            options={
+                'verbose_name': 'Settings',
+                'verbose_name_plural': 'Settings',
+            },
+        ),
     ]
