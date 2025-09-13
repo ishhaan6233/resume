@@ -46,8 +46,8 @@
 
   <div class="quick-actions">
     <h2>Quick Actions</h2>
-    <button class="btn">➕ Add New Application</button>
-    <button class="btn">📑 View All Resumes</button>
+    <a href="{% url 'add_application' %}" class="btn">➕ Add New Application</a>
+    <a href="{% url 'resumes' %}" class="btn">📑 View All Resumes</a>
   </div>
 </section>
 {% endblock %}
