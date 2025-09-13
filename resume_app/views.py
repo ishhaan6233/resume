@@ -25,6 +25,11 @@ def applications(request):
     ]
     return render(request, "applications.html", {"applications": applications_list})
 
+def responses(request):
+    responses_list = [
+        {"company": "a", "position": "b", "type": "c", "date": "x", "notes": "b", "next_action": "idk"},
+    ]
+    return render(request, "responses.html", {"responses": responses_list})
 
 def resumes(request):
     resumes_list = [
