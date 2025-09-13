@@ -409,3 +409,8 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+.recent_activity_item span {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}

@@ -7,26 +7,18 @@ from .forms import SettingsForm
 # Dashboard / Home
 def home(request):
     context = {
-        "applied_applications": Application.objects.filter(status="Applied").count(),
-        "interviews_scheduled": Application.objects.filter(status="Interview").count(),
-        "offers_received": Application.objects.filter(status="Offer").count(),
-        "rejections": Application.objects.filter(status="Rejected").count(),
-        "recent_activity": Application.objects.all().order_by("-date")[:4],  # last 4 apps
+        "applied_applications": JobApplication.objects.filter(status="Applied").count(),
+        "interviews_scheduled": JobApplication.objects.filter(status="Interview").count(),
+        "offers_received": JobApplication.objects.filter(status="Offer").count(),
+        "rejections": JobApplication.objects.filter(status="Rejected").count(),
+        "recent_activity": JobApplication.objects.all().order_by("-created_at")[:4],  # last 4 apps
     }
     return render(request, "home.html", context)
 
 # Applications list with filtering
 def applications(request):
-    applications_list = [
-        {"company": "Tech Solutions Inc.", "position": "Frontend Developer", "date": "Jul 20, 2024", "status": "Interview"},
-        {"company": "Global Innovations", "position": "UX/UI Designer", "date": "Jul 18, 2024", "status": "Applied"},
-        {"company": "Creative Minds Studio", "position": "Product Manager", "date": "Jul 15, 2024", "status": "Offer"},
-        {"company": "DataCorp Analytics", "position": "Data Scientist", "date": "Jul 10, 2024", "status": "Rejected"},
-        {"company": "FutureTech Ventures", "position": "Software Engineer", "date": "Jul 05, 2024", "status": "Applied"},
-        {"company": "Quantum Systems", "position": "DevOps Engineer", "date": "Jul 22, 2024", "status": "Interview"},
-        {"company": "Cloud Solutions Ltd.", "position": "Cloud Architect", "date": "Jul 12, 2024", "status": "Applied"},
-    ]
-    return render(request, "applications.html", {"applications": applications_list})
+    applications_list = JobApplication.objects.all().order_by('-date_applied')
+    return render(request, "applications.html", {"applications":applications_list})
 
 def responses(request):
     responses_list = [
@@ -85,7 +77,6 @@ def add_application(request):
         status = request.POST.get("status")
         notes = request.POST.get("notes")
 
-        from .models import JobApplication
         JobApplication.objects.create(
             company=company,
             position=position,
@@ -101,7 +92,6 @@ def add_application(request):
 
 # Enhanced applications view with search and filter
 def applications_view(request):
-    from .models import JobApplication
     active_filter = request.GET.get('status', 'all')
     search_query = request.GET.get('search', '').strip()
 

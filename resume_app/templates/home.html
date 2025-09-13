@@ -35,11 +35,15 @@
   <div class="recent-activity">
     <div class="section-header">
       <h2>Recent Activity</h2>
-      <a href="#">View All</a>
+      <a href="{% url 'applications' %}">View All</a>
     </div>
     <ul>
       {% for activity in recent_activity %}
-      <li>{{ activity.text }} <span class="time">{{ activity.time }}</span></li>
+      <li class="recent_activity_item">
+        <span> Job Application | Company Name: {{ activity.company }} | </span>
+        <span class="status {{ activity.status }}">{{ activity.status }}</span>
+        <span class="time">{{ activity.created_at }} </span>
+      </li>
       {% endfor %}
     </ul>
   </div>
