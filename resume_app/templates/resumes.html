@@ -10,10 +10,6 @@ JobJourney{% endblock %} {% block content %}
     <h2>Resume Management</h2>
 
     <!-- Toolbar -->
-    <div class="toolbar">
-      <button class="tab active">Resume Versions</button>
-      <button class="tab">Edit Current Resume</button>
-    </div>
 
     <button class="create-btn">＋ Create New Tailored Resume</button>
 
@@ -30,7 +26,6 @@ JobJourney{% endblock %} {% block content %}
       {% endif %}
 
       <div class="actions">
-        <button title="Edit">✏️</button>
         <!-- <a"
           title="Download PDF"
           class="btn"
@@ -46,7 +41,7 @@ JobJourney{% endblock %} {% block content %}
   </div>
 
   <!-- ===== Right Panel (Preview) ===== -->
-  <div class="preview-panel" id="preview-panel">
+  <div class="preview-panel" id="preview-panel" contenteditable="true">
     <div class="preview-header">
       <h2>Resume Preview</h2>
       <button id="download-pdf" data-html2canvas-ignore>
