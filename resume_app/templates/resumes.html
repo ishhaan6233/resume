@@ -48,7 +48,15 @@ JobJourney{% endblock %} {% block content %}
   <div class="preview-panel">
     <div class="preview-header">
       <h2>Resume Preview</h2>
-      <button>⬇ Download as PDF</button>
+      {% if resumes %}
+      <button
+        onclick="window.location.href='{% url 'download_resume_pdf' resume_id=resumes.0.id %}'"
+        class="btn"
+        title="Download PDF"
+      >
+        ⬇ Download as PDF
+      </button>
+      {% endif %}
     </div>
     <hr />
 
