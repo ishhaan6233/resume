@@ -239,6 +239,50 @@ footer {
   color: #555;
 }
 
+/* --- Responses Page Styles --- */
+
+
+/* Responses Container */
+.responses-container {
+  position: absolute; 
+  top: 212px; 
+  left: 112px; 
+  width: 1216px; 
+  height: 516px; 
+  background: #FFFFFF; /* white - fully opaque */
+  border-radius: 10px; 
+  border-width: 1px; 
+  border-color: #DEE1E6; /* neutral-300 */
+  border-style: solid; 
+  box-shadow: 
+    0px 0px 1px rgba(23, 26, 31, 0.86), /* #171a1fD roughly 86% opacity */
+    0px 0px 2px rgba(23, 26, 31, 0.08); /* #171a1f14 roughly 8% opacity */
+}
+
+/* Resonses Logs */
+.responses-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.responses-table th,
+.responses-table td {
+  padding: 0.8rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.responses-table th {
+  background: #f8f9fc;
+  font-weight: 600;
+  color: #555;
+}
+
+
 /* Status Labels */
 .status {
   padding: 0.2rem 0.6rem;
@@ -281,4 +325,25 @@ footer {
 }
 .action-icon.edit:hover {
   color: #2a6df4;
+}
+
+/* Make the whole page stretch to full height */
+html, body {
+  height: 100%;
+}
+
+/* Page layout: flexbox */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content area grows to push footer down */
+main {
+  flex: 1;
+}
+
+/* Footer fixed at bottom when content is short */
+footer {
+  margin-top: auto;
 }
