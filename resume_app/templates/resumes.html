@@ -1,24 +1,22 @@
 {% extends "base.html" %} {% load static %} {% block title %}Resumes -
 JobJourney{% endblock %} {% block content %}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <div class="page">
   <!-- ===== Left Panel ===== -->
   <div class="left-panel">
     <h2>Resume Management</h2>
 
     <!-- Toolbar -->
-    <div class="toolbar">
-      <button class="tab active">Resume Versions</button>
-      <button class="tab">Edit Current Resume</button>
-    </div>
 
     <button class="create-btn">＋ Create New Tailored Resume</button>
 
     <!-- Resume Cards -->
     {% for resume in resumes %}
     <div
-      class="resume-card {% if resume.status == 'Active' %}active{% endif %}"
-    >
+      class="resume-card {% if resume.status == 'Active' %}active{% endif %}">
       <h3>{{ resume.name }}</h3>
       <div class="meta">Last Modified: {{ resume.updated }}</div>
       <div class="meta">Status: {{ resume.status }}</div>
@@ -28,13 +26,11 @@ JobJourney{% endblock %} {% block content %}
       {% endif %}
 
       <div class="actions">
-        <button title="Edit">✏️</button>
-        <a
-          href="{% url 'download_resume_pdf' resume_id=resume.id %}"
+        <!-- <a"
           title="Download PDF"
           class="btn"
           >⬇️ Download PDF</a
-        >
+        > -->
         <button title="Delete">🗑️</button>
         {% if resume.status != "Active" %}
         <button class="set-active">Set Active</button>
@@ -45,12 +41,12 @@ JobJourney{% endblock %} {% block content %}
   </div>
 
   <!-- ===== Right Panel (Preview) ===== -->
-  <div class="preview-panel">
+  <div class="preview-panel" id="preview-panel" contenteditable="true">
     <div class="preview-header">
       <h2>Resume Preview</h2>
-      {% if resumes %}
-        <button onclick="window.location.href='{% url 'download_resume_pdf' resume_id=resumes.0.id %}'" class="btn" title="Download PDF">⬇ Download as PDF</button>
-      {% endif %}
+      <button id="download-pdf" data-html2canvas-ignore>
+        ⬇ Download as PDF
+      </button>
     </div>
     <hr />
 
@@ -178,4 +174,26 @@ JobJourney{% endblock %} {% block content %}
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById("download-pdf").addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("p", "pt", "a4"); // portrait, points, A4 size
+
+    const element = document.getElementById("preview-panel");
+
+    // make it crisp with scale: 2
+    html2canvas(element, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const imgProps = doc.getImageProperties(imgData);
+
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      doc.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      doc.save("applications.pdf");
+    });
+  });
+</script>
+
 {% endblock %}
