@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import UserSettings
+from .forms import SettingsForm
 
 def home(request):
     context = {
@@ -27,3 +29,19 @@ def applications(request):
         {"company": "Cloud Solutions Ltd.", "position": "Cloud Architect", "date": "Jul 12, 2024", "status": "Applied"},
     ]
     return render(request, "applications.html", {"applications": applications_list})
+
+
+def settings_view(request):
+    # ensure we always have one settings row
+    settings_obj, _ = UserSettings.objects.get_or_create(pk=1)
+
+    if request.method == "POST":
+        form = SettingsForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            # simple success flash
+            return redirect("settings")
+    else:
+        form = SettingsForm(instance=settings_obj)
+
+    return render(request, "settings.html", {"form": form})
