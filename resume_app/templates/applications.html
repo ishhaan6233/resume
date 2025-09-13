@@ -69,7 +69,7 @@
       <td>{{ app.date_applied|date:'M d, Y' }}</td>
       <td><span class="status {{ app.status }}">{{ app.status }}</span></td>
       <td>
-        <a href="#" class="action-icon">🗑️</a>
+        <a href="{% url 'delete_application' app_id=app.id %}" class="action-icon" onclick="return confirm('Are you sure you want to delete this application?');">🗑️</a>
       </td>
     </tr>
     {% empty %}

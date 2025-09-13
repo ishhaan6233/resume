@@ -1,5 +1,7 @@
+# Delete application
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Application
+from .models import Application, JobApplication
+
 
 # Dashboard / Home
 def home(request):
@@ -115,3 +117,9 @@ def applications_view(request):
         'search_query': search_query
     }
     return render(request, 'applications.html', context)
+
+# Delete application
+def delete_application(request, app_id):
+    from .models import JobApplication
+    JobApplication.objects.filter(id=app_id).delete()
+    return redirect('applications')
