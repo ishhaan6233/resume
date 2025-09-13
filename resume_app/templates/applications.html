@@ -1,6 +1,15 @@
 {% extends "base.html" %} {% block title %}Applications - JobJourney{%endblock%} {% block content %}
 <h1>Job Applications</h1>
 
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" data-status="all">All</button>
+  <button class="tab" data-status="Applied">Applied</button>
+  <button class="tab" data-status="Interview">Interview</button>
+  <button class="tab" data-status="Offer">Offer</button>
+  <button class="tab" data-status="Rejected">Rejected</button>
+</div>
+
 <!-- Action bar -->
 <div class="actions">
   <a href="#" class="btn">+ Add New Application</a>
@@ -8,13 +17,14 @@
 </div>
 
 <!-- Applications Table -->
-<table>
+<table class="applications-table">
   <thead>
-    <tr
+    <tr>
       <th>Company</th>
       <th>Position</th>
       <th>Date Applied</th>
       <th>Status</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -23,13 +33,15 @@
       <td>{{ app.company }}</td>
       <td>{{ app.position }}</td>
       <td>{{ app.date }}</td>
+      <td><span class="status {{ app.status }}">{{ app.status }}</span></td>
       <td>
-        <span class="status {{ app.status }}">{{ app.status }}</span>
+        <!-- Placeholder delete icon, no reverse URL needed -->
+        <a href="#" class="action-icon">🗑️</a>
       </td>
     </tr>
     {% empty %}
     <tr>
-      <td colspan="4">No applications yet.</td>
+      <td colspan="5">No applications yet.</td>
     </tr>
     {% endfor %}
   </tbody>

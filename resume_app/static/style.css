@@ -157,3 +157,128 @@ footer {
   margin-left: 1rem;
   text-decoration: none;
 }
+
+/* --- Applications Page Styles --- */
+
+/* Tabs */
+.tabs {
+  margin: 1rem 0;
+}
+
+.tab {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: #f0f4ff;
+  border-color: #2a6df4;
+}
+
+.tab.active {
+  background: #2a6df4;
+  color: #fff;
+  border-color: #2a6df4;
+}
+
+/* Action Bar */
+.actions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.actions .btn {
+  padding: 0.5rem 1rem;
+  background: #2a6df4;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.actions .btn:hover {
+  background: #1f54b5;
+}
+
+.actions .search {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+/* Applications Table */
+.applications-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.applications-table th,
+.applications-table td {
+  padding: 0.8rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.applications-table th {
+  background: #f8f9fc;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Status Labels */
+.status {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status.Applied {
+  background: #e0f0ff;
+  color: #2a6df4;
+}
+
+.status.Interview {
+  background: #fff4e0;
+  color: #f59e0b;
+}
+
+.status.Offer {
+  background: #e6ffed;
+  color: #059669;
+}
+
+.status.Rejected {
+  background: #ffe6e6;
+  color: #dc2626;
+}
+
+/* Action Icons */
+.action-icon {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.action-icon:hover {
+  color: #dc2626;
+}
+.action-icon.edit:hover {
+  color: #2a6df4;
+}
