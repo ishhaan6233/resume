@@ -14,3 +14,16 @@ def home(request):
         ]
     }
     return render(request, "home.html", context)
+
+
+def applications(request):
+    applications_list = [
+        {"company": "Tech Solutions Inc.", "position": "Frontend Developer", "date": "Jul 20, 2024", "status": "Interview"},
+        {"company": "Global Innovations", "position": "UX/UI Designer", "date": "Jul 18, 2024", "status": "Applied"},
+        {"company": "Creative Minds Studio", "position": "Product Manager", "date": "Jul 15, 2024", "status": "Offer"},
+        {"company": "DataCorp Analytics", "position": "Data Scientist", "date": "Jul 10, 2024", "status": "Rejected"},
+        {"company": "FutureTech Ventures", "position": "Software Engineer", "date": "Jul 05, 2024", "status": "Applied"},
+        {"company": "Quantum Systems", "position": "DevOps Engineer", "date": "Jul 22, 2024", "status": "Interview"},
+        {"company": "Cloud Solutions Ltd.", "position": "Cloud Architect", "date": "Jul 12, 2024", "status": "Applied"},
+    ]
+    return render(request, "applications.html", {"applications": applications_list})
