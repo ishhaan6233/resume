@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Metrics Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Job Application Metrics</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Status Chart -->
+    <div class="card p-4 bg-white rounded-lg shadow">
+      <h3 class="font-semibold mb-2">Applications by Status</h3>
+      <canvas id="statusChart"></canvas>
+    </div>
+
+    <!-- Company Chart -->
+    <div class="card p-4 bg-white rounded-lg shadow">
+      <h3 class="font-semibold mb-2">Top Companies Applied</h3>
+      <canvas id="companyChart"></canvas>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Status Pie Chart
+  new Chart(document.getElementById("statusChart"), {
+    type: "doughnut",
+    data: {
+      labels: {{ status_labels|safe }},
+      datasets: [{
+        data: {{ status_data|safe }},
+        backgroundColor: ["#2563eb","#22c55e","#f97316","#ef4444"]
+      }]
+    }
+  });
+
+  // Company Bar Chart
+  new Chart(document.getElementById("companyChart"), {
+    type: "bar",
+    data: {
+      labels: {{ company_labels|safe }},
+      datasets: [{
+        label: "Applications",
+        data: {{ company_data|safe }},
+        backgroundColor: "#2563eb"
+      }]
+    },
+    options: { scales: { y: { beginAtZero: true } } }
+  });
+</script>
+{% endblock %}

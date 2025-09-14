@@ -8,7 +8,9 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 from .models import Application, JobApplication, UserSettings, UserProfile
 from .forms import SettingsForm, CustomUserCreationForm, CustomAuthenticationForm
-
+import json
+from django.db.models import Count
+from django.utils.dateformat import DateFormat
 
 # Landing page
 def landing(request):
@@ -273,3 +275,27 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'You have been logged out.')
     return redirect('landing')
+
+@login_required
+def metrics(request):
+    # Get all applications for this user
+    apps = JobApplication.objects.filter(user=request.user)
+
+    # Applications by Status
+    status_counts = apps.values("status").annotate(count=Count("id"))
+    status_labels = [s["status"] for s in status_counts]
+    status_data = [s["count"] for s in status_counts]
+
+    # Top Companies (by number of applications)
+    company_counts = apps.values("company").annotate(count=Count("id")).order_by("-count")[:10]
+    company_labels = [c["company"] for c in company_counts]
+    company_data = [c["count"] for c in company_counts]
+
+    context = {
+        "status_labels": status_labels,
+        "status_data": status_data,
+        "company_labels": company_labels,
+        "company_data": company_data,
+    }
+
+    return render(request, "metrics.html", context)
