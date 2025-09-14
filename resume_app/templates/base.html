@@ -1,12 +1,13 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en"
-      data-theme="{{ appearance.theme|default:'light' }}"
-      data-font="{{ appearance.font_size|default:'medium' }}"
-      data-compact="{% if appearance.compact_mode %}1{% else %}0{% endif %}">
+<html
+  lang="en"
+  data-theme="{{ appearance.theme|default:'light' }}"
+  data-font="{{ appearance.font_size|default:'medium' }}"
+  data-compact="{% if appearance.compact_mode %}1{% else %}0{% endif %}">
   <head>
     <meta charset="UTF-8" />
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="light dark" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}JobJourney{% endblock %}</title>
 
@@ -16,12 +17,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
 
     <!-- primary color from user settings -->
     <style>
-      :root { --primary: {{ appearance.primary_color|default:'#0d6efd' }}; }
+      :root {
+        --primary: {
+           {
+            appearance.primary_color|default: "#0d6efd";
+          }
+        }
+      }
     </style>
     {% block extra_css %}{% endblock %}
   </head>
@@ -39,23 +45,23 @@
       </ul>
       <div class="profile">
         {% if user.is_authenticated %}
-          <div class="user-menu">
-            <span class="user-name">{{ user.first_name|default:user.username }}</span>
-            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-          </div>
+        <div class="user-menu">
+          <span class="user-name"
+            >{{ user.first_name|default:user.username }}</span
+          >
+          <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
         {% else %}
-          <div class="auth-buttons">
-            <a href="{% url 'login' %}" class="btn-nav">Login</a>
-            <a href="{% url 'register' %}" class="btn-nav">Sign Up</a>
-          </div>
+        <div class="auth-buttons">
+          <a href="{% url 'login' %}" class="btn-nav">Login</a>
+          <a href="{% url 'register' %}" class="btn-nav">Sign Up</a>
+        </div>
         {% endif %}
       </div>
     </nav>
 
     <!-- Page Content -->
-    <main class="container">
-      {% block content %}{% endblock %}
-    </main>
+    <main class="container">{% block content %}{% endblock %}</main>
 
     <!-- Footer -->
     <footer>
@@ -63,7 +69,7 @@
         <a href="#">Resources</a>
       </div>
       <div class="footer-icons">
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1">in</a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">in</a>
       </div>
       <p class="footer-copy">&copy; 2025 JobJourney</p>
     </footer>
@@ -74,21 +80,27 @@
         var root = document.documentElement;
 
         function resolveAuto() {
-          var chosen = root.getAttribute('data-theme');           // light | dark | auto
-          if (chosen === 'auto') {
-            var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            root.setAttribute('data-theme-resolved', dark ? 'dark' : 'light');
+          var chosen = root.getAttribute("data-theme"); // light | dark | auto
+          if (chosen === "auto") {
+            var dark = window.matchMedia(
+              "(prefers-color-scheme: dark)"
+            ).matches;
+            root.setAttribute("data-theme-resolved", dark ? "dark" : "light");
           } else {
-            root.setAttribute('data-theme-resolved', chosen);
+            root.setAttribute("data-theme-resolved", chosen);
           }
         }
 
         resolveAuto();
         try {
-          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', resolveAuto);
+          window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", resolveAuto);
         } catch (e) {
           // Safari < 14
-          window.matchMedia('(prefers-color-scheme: dark)').addListener(resolveAuto);
+          window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addListener(resolveAuto);
         }
       })();
     </script>

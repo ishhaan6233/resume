@@ -869,3 +869,169 @@ footer { background: var(--panel) !important; border-top: 1px solid var(--border
   color: var(--primary);
   background: color-mix(in srgb, var(--primary) 12%, var(--panel));
 }
+
+/* --- THEME FIX PATCH (global) ----------------------------------- */
+/* Headings should follow theme */
+h1, h2, h3, h4 { color: var(--text); }
+
+/* Settings sidebar links respect theme (normal + active + hover) */
+.settings-page .settings-link { color: var(--text); }
+.settings-page .settings-link:hover { background: var(--input-bg); }
+:root[data-theme-resolved="dark"] .settings-page .settings-link.active {
+  color: var(--text);
+  /* subtle highlight in dark */
+  background: rgba(138, 180, 248, 0.14);
+}
+
+/* Category card headers were hard-coded light */
+.settings-page .category-card .card-header,
+.settings-card .card-header {
+  background: var(--panel);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Inputs: disabled/readonly still looked light */
+input:disabled,
+select:disabled,
+textarea:disabled,
+.form-control:disabled {
+  background: var(--panel);
+  color: var(--muted);
+  border-color: var(--border);
+  opacity: 1; /* keep legible */
+}
+input::placeholder,
+textarea::placeholder { color: var(--muted); }
+
+/* Buttons that were using literal blues → use primary token */
+.actions .btn,
+.quick-actions .btn,
+.btn-primary,
+button.btn.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.actions .btn:hover,
+.quick-actions .btn:hover,
+.btn-primary:hover,
+button.btn.btn-primary:hover {
+  filter: brightness(0.92);
+}
+
+/* Search bars / dark inputs that were left light in some pages */
+.search,
+.search-input {
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--input-border);
+}
+
+/* Make app “card” shells follow theme */
+.card,
+.panel,
+.modal-content,
+.settings-card,
+.settings-sidebar {
+  background: var(--panel);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* ---- Dark mode stragglers: forms + category list ---- */
+
+/* Generic “form card” wrappers – pick up theme tokens */
+.form-card,
+.form-wrapper,
+.application-form,
+.new-application-card,
+.content-card,
+main .form-panel,
+main .card.form,
+main .panel.form {
+  background: var(--panel) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* Titles inside those forms */
+.form-card h1, .form-card h2, .form-card h3,
+.form-wrapper h1, .form-wrapper h2, .form-wrapper h3,
+.application-form h1, .application-form h2, .application-form h3 {
+  color: var(--text) !important;
+}
+
+/* “Cancel” / outline buttons so they’re readable in dark */
+.btn-outline, .btn-secondary,
+button.btn-outline, button.btn-secondary {
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+.btn-outline:hover, .btn-secondary:hover {
+  background: rgba(255,255,255,.06) !important;
+}
+
+/* Settings → Category tiles should not be white */
+.settings-page .category-item{
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+.settings-page .category-item .muted { color: var(--muted) !important; }
+.settings-page .category-item .dot   { border-color: var(--border) !important; }
+
+/* In case the header strip was hard-coded light */
+.settings-page .category-card .card-header{
+  background: var(--panel) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* --- Dark-mode fix: Add Application panel & lingering light bits --- */
+
+/* The big form panel on /applications/add/ (hit a bunch of likely wrappers) */
+.add-application,
+.add-application-card,
+.application-form,
+.application-form-card,
+.form-wrapper,
+.form-card {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25) !important;
+  border-radius: 12px;
+}
+
+/* Make sure the section title inside that panel is visible in dark mode */
+.add-application h1,
+.application-form h1 { color: var(--text) !important; }
+
+/* Inputs are already themed globally, but ensure placeholders read well */
+.add-application ::placeholder,
+.application-form ::placeholder { color: var(--muted) !important; }
+
+/* Status select on the form (sometimes gets default UA styles) */
+.add-application select,
+.application-form select {
+  background: var(--input-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--input-border) !important;
+}
+
+/* Settings → Application Categories: make the list header stop being white */
+.settings-page .category-card .card-header {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* And the category rows themselves */
+.settings-page .category-item {
+  background: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--text) !important;
+}
+.settings-page .category-item .muted { color: var(--muted) !important; }
