@@ -2,7 +2,7 @@
 JobJourney{% endblock %} {% block content %}
 <link rel="stylesheet" href="{% static 'css/settings.css' %}" />
 
-<div class="settings-page container mt-4">
+<div class="settings-page mt-4">
   <div class="settings-layout">
     <aside class="settings-sidebar">
       <a
@@ -157,8 +157,56 @@ JobJourney{% endblock %} {% block content %}
         <p class="text-muted mb-4">
           Organize your job applications with custom categories.
         </p>
+        <div class="categories-grid">
+          <!-- Left: create card -->
+          <div class="category-card">
+            <div class="card-header">Add New Category</div>
+            <div class="card-body">
+              <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="{{ form.name.id_for_label }}" class="form-label">Category Name</label>
+                  {{ form.name }}
+                </div>
+                <div class="mb-3">
+                  <label for="{{ form.color.id_for_label }}" class="form-label">Color</label>
+                  {{ form.color }}
+                </div>
+                <div class="mb-3">
+                  <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                  {{ form.description }}
+                </div>
+                <button class="btn btn-primary">Add Category</button>
+              </form>
+            </div>
+          </div>
 
-        <div class="row">
+          <!-- Right: list card -->
+          <div class="category-card">
+            <div class="card-header">Your Categories</div>
+            <div class="card-body">
+              {% if categories %}
+                <ul class="category-list">
+                  {% for c in categories %}
+                    <li class="category-item">
+                      <span class="dot" style="--dot: {{ c.color|default:'#64748b' }};"></span>
+                      <div class="meta">
+                        <strong>{{ c.name }}</strong><br>
+                        {% if c.description %}<span class="muted">{{ c.description }}</span>{% endif %}
+                      </div>
+                      <a href="{% url 'delete_category' category_id=c.id %}" class="btn-icon"
+                        title="Delete" onclick="return confirm('Delete this category?');">🗑️</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="text-muted mb-0">No categories yet. Create your first one on the left.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+        <!-- <div class="row">
           <div class="col-md-6">
             <div class="card">
               <div class="card-header">
@@ -241,7 +289,8 @@ JobJourney{% endblock %} {% block content %}
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
+        
 
         {% elif active_section == 'appearance' %}
         <h4 class="mb-4">Appearance Settings</h4>
