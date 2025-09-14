@@ -631,3 +631,241 @@ footer {
 /* Optional: a touch more interior room in cards */
 .settings-page .settings-card .card-body{ padding-inline: clamp(24px, 3vw, 48px); }
 
+/* ===== Theming layer ===== */
+
+/* Defaults (light) */
+:root {
+  --primary: #0d6efd;              /* overwritten inline from base.html */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --input-bg: #f8fafc;
+  --input-border: #e5e7eb;
+}
+
+/* Use the *resolved* theme attr set by the script */
+:root[data-theme-resolved="dark"] {
+  --bg: #0b1220;
+  --surface: #101826;
+  --text: #e5e7eb;
+  --muted: #a1a1aa;
+  --border: #26324a;
+  --input-bg: #0f172a;
+  --input-border: #20304a;
+}
+
+/* Global swaps */
+body { background: var(--bg); color: var(--text); }
+a { color: var(--primary); }
+.btn-primary,
+button.btn.btn-primary { background: var(--primary); border-color: var(--primary); }
+
+.card, .settings-card, .settings-sidebar {
+  background: var(--surface);
+  border-color: var(--border);
+}
+.form-control,
+input[type="text"], input[type="email"], input[type="number"],
+input[type="password"], textarea, select {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text);
+}
+
+/* Font size scaling from user pref */
+:root[data-font="small"]  { font-size: 14px; }
+:root[data-font="medium"] { font-size: 16px; }
+:root[data-font="large"]  { font-size: 18px; }
+
+/* Compact mode – dial down paddings a bit */
+:root[data-compact="1"] .settings-card .card-body { padding: 20px; }
+:root[data-compact="1"] .settings-sidebar { padding: 8px; }
+:root[data-compact="1"] .form-control { padding: 8px 10px; }
+
+/* (Optional) accent tints for borders/shadows in both themes */
+.card, .settings-card, .settings-sidebar {
+  box-shadow: 0 0 1px rgba(23,26,31,.10), 0 2px 6px rgba(23,26,31,.06);
+}
+:root[data-theme-resolved="dark"] .card,
+:root[data-theme-resolved="dark"] .settings-card,
+:root[data-theme-resolved="dark"] .settings-sidebar {
+  box-shadow: 0 0 1px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.45);
+}
+
+/* ===================== */
+/* THEME TOKENS & OVERRIDES */
+/* ===================== */
+
+/* Light defaults */
+:root{
+  --bg: #f6f8fc;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --text: #0f172a;         /* main text */
+  --muted: #6b7280;        /* secondary text */
+  --border: #e5e7eb;
+  --input-bg: #f8fafc;
+  --input-border: #e2e8f0;
+  --link: #0a58ff;
+  /* your primary color already comes from base.html: :root{ --primary: ... } */
+  --card: #0f172a;         /* existing KPI dark cards */
+  --card-text: #cbd5e1;
+}
+
+/* Dark (resolved) */
+html[data-theme-resolved="dark"]{
+  --bg: #0b1220;
+  --panel: #0e1526;
+  --surface: #111827;
+  --text: #e5e7eb;
+  --muted: #9aa4b2;
+  --border: #223043;
+  --input-bg: #0e1526;
+  --input-border: #223043;
+  --link: #8ab4f8;
+  --card: #0e1628;         /* slightly lighter than bg for “cards” */
+  --card-text: #d5ddec;
+}
+
+/* Global surfaces */
+body{ background: var(--bg); color: var(--text); }
+a{ color: var(--link); }
+
+/* Top nav */
+.navbar{
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.navbar a, .logo, .user-name{ color: var(--text); }
+
+/* Generic “cards/panels” */
+.settings-card,
+.category-card,
+.card,
+.panel,
+.modal-content{
+  background: var(--panel);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Forms */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+select,
+textarea,
+.form-control{
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--input-border);
+}
+input::placeholder, textarea::placeholder{ color: var(--muted); }
+
+/* Tables */
+.table{ color: var(--text); }
+.table thead th{ background: var(--panel); border-color: var(--border); }
+.table td, .table th{ border-color: var(--border); }
+
+/* KPI / stats tiles */
+.kpi-card, .stats-card{
+  background: var(--card);
+  color: var(--card-text);
+  border-color: transparent;
+}
+
+/* Side menu */
+.settings-sidebar{
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+/* Search bars / utilities that looked “too dark” */
+.search-bar, .search-input{
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--input-border);
+}
+
+/* Optional: compact mode spacing */
+html[data-compact="1"] .settings-card .card-body{ padding: 20px; }
+
+
+/* ===== Dark-mode fixes: map light hard-coded parts to theme tokens ===== */
+
+/* Global surfaces & text */
+body { background: var(--bg) !important; color: var(--text) !important; }
+a { color: var(--link); }
+
+/* Top nav */
+.navbar { background: var(--panel) !important; border-bottom: 1px solid var(--border) !important; }
+.logo, .nav-links a, .user-name { color: var(--text) !important; }
+
+/* Greeting strip */
+.greeting { background: var(--panel) !important; color: var(--text) !important; }
+
+/* Generic cards/panels/sidebars */
+.card,
+.recent-activity,
+.quick-actions,
+.settings-card,
+.category-card,
+.settings-sidebar,
+.panel,
+.modal-content,
+.responses-container {       /* your responses white box */
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Tables & list containers */
+.applications-table,
+.responses-table,
+.applications-table th,
+.responses-table th {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Inputs / search bars */
+.actions .search,
+.search,
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="password"],
+textarea,
+select,
+.form-control {
+  background: var(--input-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--input-border) !important;
+}
+
+/* Tabs */
+.tab { background: var(--panel) !important; border-color: var(--border) !important; color: var(--text) !important; }
+.tab:hover { background: color-mix(in srgb, var(--panel) 85%, var(--link)) !important; border-color: var(--link) !important; }
+.tab.active { background: var(--primary) !important; color: #fff !important; border-color: var(--primary) !important; }
+
+/* Footer */
+footer { background: var(--panel) !important; border-top: 1px solid var(--border) !important; color: var(--text) !important; }
+.footer-links a { color: var(--muted) !important; }
+
+/* Settings sidebar: theme-aware colors */
+.settings-page .settings-link{
+  color: var(--text);
+  background: transparent;
+}
+.settings-page .settings-link:hover{
+  background: color-mix(in srgb, var(--primary) 10%, var(--panel));
+}
+.settings-page .settings-link.active{
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--panel));
+}
