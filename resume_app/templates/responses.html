@@ -1,6 +1,34 @@
 {% extends "base.html" %} {% block title %}Responses - JobJourney{%endblock%} {% block content %}
 <h1>Responses</h1>
 
+<style>
+  .notes-box {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+
+    max-height: 100px; /* vertical cap */
+    width: 200px; /* constrain width so text wraps */
+    overflow-y: auto; /* vertical scroll if needed */
+    overflow-x: hidden; /* prevent horizontal overflow */
+    white-space: pre-line; /* preserve line breaks */
+    word-break: break-word; /* wrap long words */
+    display: block; /* ensures width/height apply */
+  }
+
+  #response_actions_container .action-icon {
+    margin-right: 30px; /* space between icons */
+    text-decoration: none; /* optional, removes underline if any */
+    font-size: 18px; /* optional, adjust icon size */
+    display: inline-block; /* ensures margin applies correctly */
+  }
+
+  /* Remove extra margin from the last icon */
+  #response_actions_container .action-icon:last-child {
+    margin-right: 0;
+  }
+</style>
+
 <!-- Tabs -->
 <form method="get" id="response-filter-form" style="margin-bottom: 16px">
   <div class="tabs">
