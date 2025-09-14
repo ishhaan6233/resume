@@ -11,7 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet" />
+      rel="stylesheet"
+    />
   </head>
   <body>
     <!-- Navbar -->
@@ -25,7 +26,19 @@
         <li><a href="{% url 'settings' %}">Settings</a></li>
       </ul>
       <div class="profile">
-        <img src="https://via.placeholder.com/35" style="border-radius: 50%" />
+        {% if user.is_authenticated %}
+        <div class="user-menu">
+          <span class="user-name"
+            >{{ user.first_name|default:user.username }}</span
+          >
+          <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+        {% else %}
+        <div class="auth-buttons">
+          <a href="{% url 'login' %}" class="btn-nav">Login</a>
+          <a href="{% url 'register' %}" class="btn-nav">Sign Up</a>
+        </div>
+        {% endif %}
       </div>
     </nav>
 

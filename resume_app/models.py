@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Application(models.Model):
     company = models.CharField(max_length=255)
@@ -6,11 +7,12 @@ class Application(models.Model):
     date = models.DateField()
     status = models.CharField(max_length=20)
 
-class Login(models.Model):
-    username = models.CharField(max_length=150, unique=True)
-    password = models.CharField(max_length=128)
-    email = models.EmailField(unique=True)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=20, blank=True)
+    bio = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Resume(models.Model):
     name = models.CharField(max_length=255)
@@ -24,6 +26,7 @@ class Resume(models.Model):
 
 # Model for the new job application form
 class JobApplication(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_applications', null=True, blank=True)
     company = models.CharField(max_length=255)
     position = models.CharField(max_length=255)
     url = models.URLField(blank=True, null=True)
@@ -36,6 +39,9 @@ class JobApplication(models.Model):
     ])
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.company} - {self.position}"
 class UserSettings(models.Model):
     """Single-row settings for this app (no multi-user)."""
     display_name = models.CharField(max_length=100, default="Name")
