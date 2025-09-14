@@ -563,3 +563,162 @@ body {
 .section-controls button:hover {
   background: #0c5ba0;
 }
+
+/* ===== Theme bridge for Resumes (append at end) ===== */
+
+/* Surfaces & text */
+body { background: var(--bg) !important; color: var(--text) !important; }
+
+.navbar {
+  background: var(--panel) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+.navbar .logo,
+.navbar .menu a { color: var(--text) !important; }
+.navbar .menu a.active { color: var(--primary) !important; }
+
+/* Cards / panels */
+.resume-card,
+.preview-panel,
+.section,
+.section .content {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.resume-card .meta,
+.job-meta { color: var(--muted) !important; }
+
+.preview-panel hr { border-top: 1px solid var(--border) !important; }
+
+/* Toolbar & tabs */
+.toolbar .tab {
+  background: var(--panel) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+.toolbar .tab.active {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* “Create/Add” buttons (soft primary tint) */
+.create-btn,
+.add-item-btn,
+.add-job-btn,
+.add-education-btn,
+.add-skill-btn,
+.add-project-btn {
+  background: color-mix(in srgb, var(--primary) 12%, var(--panel)) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+/* Small buttons on cards */
+.resume-card .set-active,
+.resume-card .delete-btn,
+.resume-card .actions button {
+  background: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--muted) !important;
+}
+.resume-card .delete-btn:hover {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #fff !important;
+}
+.resume-card .set-active:hover { border-color: var(--primary) !important; color: var(--primary) !important; }
+
+/* Headlines / badges / primary CTAs */
+.section h3,
+.resume-card .badge,
+.preview-header button {
+  background: var(--primary) !important;
+  color: #fff !important;
+  border-color: var(--primary) !important;
+}
+
+/* Links inside preview */
+.contact { color: var(--text) !important; }
+.contact a,
+.projects a { color: var(--link) !important; }
+
+/* --- THEME OVERRIDES FOR RESUMES PAGE ---------------------------- */
+
+/* Use app theme tokens instead of hard-coded light colors */
+.page { background: transparent; }
+
+.left-panel h2,
+.resume-card h3,
+.resume-card .meta,
+.preview-header h2 { color: var(--text); }
+
+.resume-card,
+.section,
+.section .content {
+  background: var(--panel);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/* Make the right preview panel theme-aware */
+.preview-panel{
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,.20);
+}
+
+.preview-panel hr { border-top: 1px solid var(--border); }
+
+/* Headings inside resume sections use your primary color */
+.section h3 { background: var(--primary); color: #fff; }
+
+/* Links (contact / projects) tint */
+.contact a,
+.projects a { color: var(--primary); }
+
+/* Create button & minor accents */
+.create-btn{
+  background: color-mix(in srgb, var(--primary) 12%, var(--panel));
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.create-btn:hover{
+  background: color-mix(in srgb, var(--primary) 18%, var(--panel));
+}
+
+/* Card action buttons honor theme and remain readable even when disabled */
+.resume-card .set-active,
+.resume-card .delete-btn{
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text);
+}
+.resume-card .set-active:hover{
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.resume-card .delete-btn:hover{
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+/* Disabled state: visible text */
+.resume-card .set-active:disabled,
+.resume-card .delete-btn:disabled{
+  opacity: .85;
+  color: var(--muted);
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+/* Inputs inside resumes page follow theme */
+.preview-panel input,
+.preview-panel textarea,
+.preview-panel select{
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--input-border);
+}
