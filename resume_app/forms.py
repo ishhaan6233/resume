@@ -1,9 +1,31 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import UserSettings, UserProfile
+from .models import UserSettings, UserProfile, ApplicationCategory, AppearanceSettings, AccessibilitySettings
 
 class SettingsForm(forms.ModelForm):
+    # User profile fields
+    first_name = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={"class": "form-control"})
+    )
+    phone = forms.CharField(
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    bio = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 4})
+    )
+    
     class Meta:
         model = UserSettings
         fields = ["display_name", "default_followup_days", "email_notifications"]
@@ -12,6 +34,41 @@ class SettingsForm(forms.ModelForm):
             "default_followup_days": forms.NumberInput(attrs={"class": "form-control", "min": 1}),
             "email_notifications": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        profile = kwargs.pop('profile', None)
+        super().__init__(*args, **kwargs)
+        
+        if user:
+            self.fields['first_name'].initial = user.first_name
+            self.fields['last_name'].initial = user.last_name
+            self.fields['email'].initial = user.email
+        
+        if profile:
+            self.fields['phone'].initial = profile.phone
+            self.fields['bio'].initial = profile.bio
+    
+    def save(self, commit=True):
+        settings = super().save(commit=False)
+        
+        if commit:
+            settings.save()
+            
+            # Update user information
+            user = settings.user
+            user.first_name = self.cleaned_data['first_name']
+            user.last_name = self.cleaned_data['last_name']
+            user.email = self.cleaned_data['email']
+            user.save()
+            
+            # Update user profile
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            profile.phone = self.cleaned_data['phone']
+            profile.bio = self.cleaned_data['bio']
+            profile.save()
+        
+        return settings
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
@@ -98,3 +155,44 @@ class CustomAuthenticationForm(AuthenticationForm):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"})
     )
+
+class NotificationSettingsForm(forms.ModelForm):
+    class Meta:
+        model = UserSettings
+        fields = ['email_notifications']
+        widgets = {
+            'email_notifications': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class ApplicationCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ApplicationCategory
+        fields = ['name', 'color', 'description']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+class AppearanceSettingsForm(forms.ModelForm):
+    class Meta:
+        model = AppearanceSettings
+        fields = ['theme', 'primary_color', 'font_size', 'compact_mode']
+        widgets = {
+            'theme': forms.Select(attrs={'class': 'form-control'}),
+            'primary_color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color'}),
+            'font_size': forms.Select(attrs={'class': 'form-control'}),
+            'compact_mode': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+class AccessibilitySettingsForm(forms.ModelForm):
+    class Meta:
+        model = AccessibilitySettings
+        fields = ['high_contrast', 'reduced_motion', 'screen_reader_friendly', 'keyboard_navigation', 'focus_indicators']
+        widgets = {
+            'high_contrast': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'reduced_motion': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'screen_reader_friendly': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'keyboard_navigation': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'focus_indicators': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

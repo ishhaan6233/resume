@@ -1,58 +1,111 @@
-{% extends "base.html" %} {% block title %}Responses - JobJourney{%endblock%}
+{% extends "base.html" %} {% block title %}Responses - JobJourney{% endblock %}
 {% block content %}
 <h1>Responses</h1>
 
 <!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" data-status="all">All</button>
-  <button class="tab" data-status="Applied">Interview</button>
-  <button class="tab" data-status="Interview">Offer</button>
-  <button class="tab" data-status="Offer">Rejection</button>
-  <button class="tab" data-status="Rejected">Follow-up</button>
-  <button class="tab" data-status="Other">Other</button>
+  <a
+    href="{% url 'responses' %}?type=all"
+    class="tab {% if active_filter == 'all' %}active{% endif %}"
+    >All</a
+  >
+  <a
+    href="{% url 'responses' %}?type=Interview"
+    class="tab {% if active_filter == 'Interview' %}active{% endif %}"
+    >Interview</a
+  >
+  <a
+    href="{% url 'responses' %}?type=Offer"
+    class="tab {% if active_filter == 'Offer' %}active{% endif %}"
+    >Offer</a
+  >
+  <a
+    href="{% url 'responses' %}?type=Rejection"
+    class="tab {% if active_filter == 'Rejection' %}active{% endif %}"
+    >Rejection</a
+  >
+  <a
+    href="{% url 'responses' %}?type=Follow-up"
+    class="tab {% if active_filter == 'Follow-up' %}active{% endif %}"
+    >Follow-up</a
+  >
+  <a
+    href="{% url 'responses' %}?type=Other"
+    class="tab {% if active_filter == 'Other' %}active{% endif %}"
+    >Other</a
+  >
 </div>
 
 <!-- Action bar -->
 <div class="actions">
-  <a href="#" class="btn">+ Add Communication Entry</a>
-  <input type="text" class="search" placeholder="Search responses..." />
+  <a href="{% url 'add_response' %}" class="btn">+ Add Communication Entry</a>
+
+  <!-- Search form -->
+  <form method="get" style="flex: 1; display: flex">
+    <input
+      type="text"
+      name="search"
+      value="{{ search_query }}"
+      class="search"
+      placeholder="Search responses..."
+      style="flex: 1; margin-right: 8px"
+    />
+    <!-- Preserve current tab filter -->
+    <input type="hidden" name="type" value="{{ active_filter }}" />
+    <button type="submit" class="btn" style="min-width: 100px">Search</button>
+  </form>
 </div>
 
 <!-- Responses Wrapper -->
- <span class="responses_container">
-<h2>Communication Log</h2>
-<table class="responses-table">
-  <thead>
-    <tr>
-      <th>Company</th>
-      <th>Position</th>
-      <th>Type</th>
-      <th>Date</th>
-      <th>Notes</th>
-      <th>Next Action</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for r in responses %}
-    <tr>
-      <td>{{ r.company }}</td>
-      <td>{{ r.position }}</td>
-      <td>{{ r.type }}</td>
-      <td>{{ r.date }}</td>
-      <td>{{ r.notes }}</td>
-      <td>{{ r.next_action }}</td>
-      <td>
-        <a href="#" class="action-icon" title="Edit">✏️</a>
-        <a href="#" class="action-icon" title="Delete" onclick="return confirm('Are you sure you want to delete this entry?');">🗑️</a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="7">No responses yet.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<span class="responses_container">
+  <h2>Communication Log</h2>
+  <table class="responses-table">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Position</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Notes</th>
+        <th>Next Action</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in responses %}
+      <tr>
+        <td>{{ r.company }}</td>
+        <td>{{ r.position }}</td>
+        <td>
+          <span class="status {{ r.response_type }}"
+            >{{ r.response_type }}</span
+          >
+        </td>
+        <td>{{ r.date|date:'M d, Y' }}</td>
+        <td>{{ r.notes }}</td>
+        <td>{{ r.next_action }}</td>
+        <td>
+          <a
+            href="{% url 'edit_response' response_id=r.id %}"
+            class="action-icon"
+            title="Edit"
+            >✏️</a
+          >
+          <a
+            href="{% url 'delete_response' response_id=r.id %}"
+            class="action-icon"
+            title="Delete"
+            onclick="return confirm('Are you sure you want to delete this entry?');"
+            >🗑️</a
+          >
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">No responses yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </span>
 {% endblock %}
