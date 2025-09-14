@@ -113,7 +113,9 @@
         <td>
           <div class="notes-box">{{ r.notes|default:"N/A" }}</div>
         </td>
-        <td>{{ r.next_action|default:"N/A" }}</td>
+        <td>
+          <div class="notes-box">{{ r.next_action|default:"N/A" }}</div>
+        </td>
         <td id="response_actions_container">
           <a
             href="{% url 'edit_response' response_id=r.id %}"
