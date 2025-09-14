@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Edit Response - JobJourney{% endblock %}
+{% block content %}
+
+<style>  
+  .centered-card {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    padding: 32px 32px 24px 32px;
+  }
+  .centered-card h2 {
+    margin-bottom: 8px;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  .subtitle {
+    color: #555;
+    margin-bottom: 24px;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  input[type="text"],
+  input[type="url"],
+  input[type="date"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #f9fafb;
+    margin-bottom: 2px;
+  }
+  textarea {
+    min-height: 60px;
+    resize: vertical;
+  }
+  .row {
+    display: flex;
+    gap: 16px;
+  }
+  .row .form-group {
+    flex: 1;
+  }
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .btn-cancel {
+    background: #fff;
+    color: #333;
+    border: 1px solid #d1d5db;
+  }
+  .btn-save {
+    background: #2563eb;
+    color: #fff;
+  }
+  .btn-save:hover {
+    background: #1742a0;
+  }
+</style>
+
+<div class="centered-card">
+
+<h1>Edit Communication Entry</h1>
+
+<form method="post" class="form">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company" value="{{ response.company }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="position">Position:</label>
+        <input type="text" id="position" name="position" value="{{ response.position }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="response_type">Response Type:</label>
+        <select id="response_type" name="response_type" required>
+            <option value="">Select type...</option>
+            <option value="Interview" {% if response.response_type == "Interview" %}selected{% endif %}>Interview</option>
+            <option value="Offer" {% if response.response_type == "Offer" %}selected{% endif %}>Offer</option>
+            <option value="Rejection" {% if response.response_type == "Rejection" %}selected{% endif %}>Rejection</option>
+            <option value="Follow-up" {% if response.response_type == "Follow-up" %}selected{% endif %}>Follow-up</option>
+            <option value="Other" {% if response.response_type == "Other" %}selected{% endif %}>Other</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="{{ response.date|date:'Y-m-d' }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="notes">Notes:</label>
+        <textarea id="notes" name="notes" rows="4">{{ response.notes }}</textarea>
+    </div>
+    
+    <div class="form-group">
+        <label for="next_action">Next Action:</label>
+        <textarea id="next_action" name="next_action" rows="3">{{ response.next_action }}</textarea>
+    </div>
+    
+    <div class="form-actions">
+        <button onclick="window.history.back()" class="btn btn-cancel">Cancel</button>
+        <button type="submit" class="btn btn-save">Update Entry</button>
+    </div>
+</form>
+</div>
+{% endblock %}

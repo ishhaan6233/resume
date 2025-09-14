@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.utils import timezone
 from datetime import datetime, timedelta
-from .models import Application, JobApplication, UserSettings, UserProfile
-from .forms import SettingsForm, CustomUserCreationForm, CustomAuthenticationForm
+from .models import Application, JobApplication, UserSettings, UserProfile, Response, Resume, ApplicationCategory, AppearanceSettings, AccessibilitySettings
+from .forms import SettingsForm, CustomUserCreationForm, CustomAuthenticationForm, NotificationSettingsForm, ApplicationCategoryForm, AppearanceSettingsForm, AccessibilitySettingsForm
 
 
 # Landing page
@@ -38,52 +38,41 @@ def applications(request):
 
 @login_required
 def responses(request):
-    responses_list = [
-        {"company": "a", "position": "b", "type": "c", "date": "x", "notes": "b", "next_action": "idk"},
-    ]
-    return render(request, "responses.html", {"responses": responses_list})
+    # Get filter parameters
+    response_type_filter = request.GET.get('type', 'all')
+    search_query = request.GET.get('search', '').strip()
+    
+    # Get user's responses
+    responses_list = Response.objects.filter(user=request.user).order_by('-date')
+    
+    # Apply filters
+    if response_type_filter != 'all':
+        responses_list = responses_list.filter(response_type=response_type_filter)
+    
+    if search_query:
+        responses_list = responses_list.filter(
+            company__icontains=search_query
+        ) | responses_list.filter(
+            position__icontains=search_query
+        )
+    
+    context = {
+        'responses': responses_list,
+        'active_filter': response_type_filter,
+        'search_query': search_query
+    }
+    return render(request, "responses.html", context)
 
 @login_required
 def resumes(request):
-    resumes_list = [
-        {
-            "id": 1,
-            "name": "Master Resume",
-            "created": "Jul 01, 2024",
-            "updated": "Jul 20, 2024",
-            "is_master": True,
-        },
-        {
-            "id": 2,
-            "name": "Software Engineer Resume",
-            "created": "Jul 05, 2024",
-            "updated": "Jul 18, 2024",
-            "is_master": False,
-        },
-        {
-            "id": 3,
-            "name": "Data Scientist Resume",
-            "created": "Jul 08, 2024",
-            "updated": "Jul 15, 2024",
-            "is_master": False,
-        },
-    ]
-
+    # Get user's resumes
+    resumes_list = Resume.objects.filter(user=request.user).order_by('-updated_at')
+    
     context = {
         "resumes": resumes_list,
         "page_title": "Resumes",
     }
     return render(request, "resumes.html", context)
-    status_filter = request.GET.get("status")  # e.g. ?status=Applied
-    if status_filter and status_filter != "all":
-        applications_list = Application.objects.filter(status=status_filter).order_by("-date")
-    else:
-        applications_list = Application.objects.all().order_by("-date")
-
-    return render(request, "applications.html", {
-        "applications": applications_list,
-        "active_filter": status_filter or "all"
-    })
 
 # Add new application
 @login_required
@@ -144,19 +133,31 @@ def delete_application(request, app_id):
 
 @login_required
 def settings_view(request):
-    # ensure we always have one settings row
-    settings_obj, _ = UserSettings.objects.get_or_create(pk=1)
+    # Get or create user-specific settings
+    settings_obj, created = UserSettings.objects.get_or_create(user=request.user)
+    
+    # Get or create user profile
+    profile, profile_created = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = SettingsForm(request.POST, instance=settings_obj)
+        form = SettingsForm(request.POST, instance=settings_obj, user=request.user, profile=profile)
         if form.is_valid():
             form.save()
-            # simple success flash
+            messages.success(request, 'Settings updated successfully!')
             return redirect("settings")
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
-        form = SettingsForm(instance=settings_obj)
+        form = SettingsForm(instance=settings_obj, user=request.user, profile=profile)
 
-    return render(request, "settings.html", {"form": form})
+    context = {
+        "form": form,
+        "user": request.user,
+        "profile": profile,
+        "settings": settings_obj,
+        "active_section": "profile"
+    }
+    return render(request, "settings.html", context)
 
 # Authentication Views
 def register_view(request):
@@ -227,3 +228,237 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'You have been logged out.')
     return redirect('landing')
+
+# Response CRUD operations
+@login_required
+def add_response(request):
+    if request.method == "POST":
+        company = request.POST.get("company")
+        position = request.POST.get("position")
+        response_type = request.POST.get("response_type")
+        date = request.POST.get("date")
+        notes = request.POST.get("notes")
+        next_action = request.POST.get("next_action")
+        
+        # Try to link to existing job application if company/position match
+        job_app = None
+        try:
+            job_app = JobApplication.objects.filter(
+                user=request.user,
+                company__iexact=company,
+                position__iexact=position
+            ).first()
+        except:
+            pass
+        
+        Response.objects.create(
+            user=request.user,
+            job_application=job_app,
+            company=company,
+            position=position,
+            response_type=response_type,
+            date=date,
+            notes=notes,
+            next_action=next_action
+        )
+        messages.success(request, 'Response added successfully!')
+        return redirect("responses")
+    
+    return render(request, "add_response.html")
+
+@login_required
+def edit_response(request, response_id):
+    response_obj = get_object_or_404(Response, id=response_id, user=request.user)
+    
+    if request.method == "POST":
+        response_obj.company = request.POST.get("company")
+        response_obj.position = request.POST.get("position")
+        response_obj.response_type = request.POST.get("response_type")
+        response_obj.date = request.POST.get("date")
+        response_obj.notes = request.POST.get("notes")
+        response_obj.next_action = request.POST.get("next_action")
+        response_obj.save()
+        messages.success(request, 'Response updated successfully!')
+        return redirect("responses")
+    
+    return render(request, "edit_response.html", {"response": response_obj})
+
+@login_required
+def delete_response(request, response_id):
+    response_obj = get_object_or_404(Response, id=response_id, user=request.user)
+    response_obj.delete()
+    messages.success(request, 'Response deleted successfully!')
+    return redirect("responses")
+
+# Resume CRUD operations
+@login_required
+def add_resume(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        summary = request.POST.get("summary")
+        experience = request.POST.get("experience")
+        education = request.POST.get("education")
+        skills = request.POST.get("skills")
+        is_master = request.POST.get("is_master") == "on"
+        
+        # If this is set as master, unset other masters
+        if is_master:
+            Resume.objects.filter(user=request.user, is_master=True).update(is_master=False)
+        
+        Resume.objects.create(
+            user=request.user,
+            name=name,
+            email=email,
+            phone=phone,
+            summary=summary,
+            experience=experience,
+            education=education,
+            skills=skills,
+            is_master=is_master
+        )
+        messages.success(request, 'Resume created successfully!')
+        return redirect("resumes")
+    
+    return render(request, "add_resume.html")
+
+@login_required
+def edit_resume(request, resume_id):
+    resume_obj = get_object_or_404(Resume, id=resume_id, user=request.user)
+    
+    if request.method == "POST":
+        resume_obj.name = request.POST.get("name")
+        resume_obj.email = request.POST.get("email")
+        resume_obj.phone = request.POST.get("phone")
+        resume_obj.summary = request.POST.get("summary")
+        resume_obj.experience = request.POST.get("experience")
+        resume_obj.education = request.POST.get("education")
+        resume_obj.skills = request.POST.get("skills")
+        is_master = request.POST.get("is_master") == "on"
+        
+        # If this is set as master, unset other masters
+        if is_master and not resume_obj.is_master:
+            Resume.objects.filter(user=request.user, is_master=True).update(is_master=False)
+        
+        resume_obj.is_master = is_master
+        resume_obj.save()
+        messages.success(request, 'Resume updated successfully!')
+        return redirect("resumes")
+    
+    return render(request, "edit_resume.html", {"resume": resume_obj})
+
+@login_required
+def delete_resume(request, resume_id):
+    resume_obj = get_object_or_404(Resume, id=resume_id, user=request.user)
+    resume_obj.delete()
+    messages.success(request, 'Resume deleted successfully!')
+    return redirect("resumes")
+
+@login_required
+def set_active_resume(request, resume_id):
+    resume_obj = get_object_or_404(Resume, id=resume_id, user=request.user)
+    
+    # Set all other resumes to inactive
+    Resume.objects.filter(user=request.user).update(is_active=False)
+    
+    # Set this resume as active
+    resume_obj.is_active = True
+    resume_obj.save()
+    
+    messages.success(request, f'{resume_obj.name} is now your active resume!')
+    return redirect("resumes")
+
+# Settings Views
+@login_required
+def settings_notifications(request):
+    settings_obj, created = UserSettings.objects.get_or_create(user=request.user)
+    
+    if request.method == "POST":
+        form = NotificationSettingsForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Notification settings updated successfully!')
+            return redirect("settings_notifications")
+    else:
+        form = NotificationSettingsForm(instance=settings_obj)
+    
+    context = {
+        "form": form,
+        "user": request.user,
+        "settings": settings_obj,
+        "active_section": "notifications"
+    }
+    return render(request, "settings.html", context)
+
+@login_required
+def settings_categories(request):
+    categories = ApplicationCategory.objects.filter(user=request.user).order_by('name')
+    
+    if request.method == "POST":
+        form = ApplicationCategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.user = request.user
+            category.save()
+            messages.success(request, 'Category created successfully!')
+            return redirect("settings_categories")
+    else:
+        form = ApplicationCategoryForm()
+    
+    context = {
+        "form": form,
+        "categories": categories,
+        "user": request.user,
+        "active_section": "categories"
+    }
+    return render(request, "settings.html", context)
+
+@login_required
+def settings_appearance(request):
+    appearance_obj, created = AppearanceSettings.objects.get_or_create(user=request.user)
+    
+    if request.method == "POST":
+        form = AppearanceSettingsForm(request.POST, instance=appearance_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Appearance settings updated successfully!')
+            return redirect("settings_appearance")
+    else:
+        form = AppearanceSettingsForm(instance=appearance_obj)
+    
+    context = {
+        "form": form,
+        "user": request.user,
+        "appearance": appearance_obj,
+        "active_section": "appearance"
+    }
+    return render(request, "settings.html", context)
+
+@login_required
+def settings_accessibility(request):
+    accessibility_obj, created = AccessibilitySettings.objects.get_or_create(user=request.user)
+    
+    if request.method == "POST":
+        form = AccessibilitySettingsForm(request.POST, instance=accessibility_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Accessibility settings updated successfully!')
+            return redirect("settings_accessibility")
+    else:
+        form = AccessibilitySettingsForm(instance=accessibility_obj)
+    
+    context = {
+        "form": form,
+        "user": request.user,
+        "accessibility": accessibility_obj,
+        "active_section": "accessibility"
+    }
+    return render(request, "settings.html", context)
+
+@login_required
+def delete_category(request, category_id):
+    category = get_object_or_404(ApplicationCategory, id=category_id, user=request.user)
+    category.delete()
+    messages.success(request, 'Category deleted successfully!')
+    return redirect("settings_categories")
