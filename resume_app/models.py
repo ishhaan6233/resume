@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 class Response(models.Model):
     company = models.CharField(max_length=255)
     position = models.CharField(max_length=255)
