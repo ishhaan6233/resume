@@ -6,38 +6,19 @@ JobJourney{% endblock %} {% block content %}
     <h2>My Resumes</h2>
     <button class="create-btn" id="create-resume">+ Create Resume</button>
 
-    <div class="resume-card" id="resume-1">
-      <h3>Marketing Resume</h3>
-      <p class="meta">Last edited: Sep 2025</p>
-      <div class="actions">
-        <button class="edit-btn">✏️ Edit</button>
-        <button class="delete-btn">🗑 Delete</button>
-      </div>
-      <button class="set-active">Set Active</button>
-    </div>
-
-    <div class="resume-card" id="resume-2">
-      <h3>Data Analyst Resume</h3>
-      <p class="meta">Last edited: Aug 2025</p>
-      <div class="actions">
-        <button class="edit-btn">✏️ Edit</button>
-        <button class="delete-btn">🗑 Delete</button>
-      </div>
-      <button class="set-active">Set Active</button>
-    </div>
+    <div id="resume-list"></div>
   </div>
 
-  <!-- Right Panel: Resume Preview -->
-  <div class="preview-panel" id="preview-panel">
-    <div class="preview-header">
-      <h2>Resume Preview</h2>
+  <div class="preview-panel" id="preview-panel"></div>
+
+  <div id="resume-template" style="display: none">
+    <div class="preview-header" contenteditable="true">
+      <h2>Name</h2>
       <button id="download-pdf" data-html2canvas-ignore>
         ⬇ Download as PDF
       </button>
     </div>
     <hr />
-
-    <!-- Contact Info -->
     <div class="contact" contenteditable="true">
       <span>(123) 456-7890</span>
       <span>example@example.com</span>
@@ -75,6 +56,7 @@ JobJourney{% endblock %} {% block content %}
       <button class="add-job-btn">+ Add Job</button>
     </div>
 
+    <!-- Education -->
     <div class="section" id="education">
       <div class="section-controls">
         <button class="move-up-btn">⬆</button>
@@ -91,6 +73,7 @@ JobJourney{% endblock %} {% block content %}
       <button class="add-education-btn">+ Add Education</button>
     </div>
 
+    <!-- Skills -->
     <div class="section" id="skills">
       <div class="section-controls">
         <button class="move-up-btn">⬆</button>
@@ -128,141 +111,276 @@ JobJourney{% endblock %} {% block content %}
       <button class="add-project-btn">+ Add Project</button>
     </div>
   </div>
-</div>
 
-<script>
-  // ===== Utility Functions =====
-  function createEditableElement(tag, html = "", classes = []) {
-    const el = document.createElement(tag);
-    el.contentEditable = true;
-    el.innerHTML = html;
-    if (classes.length) el.classList.add(...classes);
-    return el;
-  }
+  <script>
+    // ===== DOM Elements =====
+    const previewPanel = document.getElementById("preview-panel");
+    const resumeList = document.getElementById("resume-list");
+    const createResumeBtn = document.getElementById("create-resume");
+    let autosaveTimeout = null;
 
-  function addSectionItem(sectionSelector, itemClass, htmlTemplate) {
-    document.querySelectorAll(sectionSelector).forEach((button) => {
-      button.addEventListener("click", () => {
-        const section = button.closest(".section");
+    // ===== Utility Functions =====
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        document.cookie.split(";").forEach((cookie) => {
+          const c = cookie.trim();
+          if (c.startsWith(name + "=")) {
+            cookieValue = decodeURIComponent(c.slice(name.length + 1));
+          }
+        });
+      }
+      return cookieValue;
+    }
+
+    function createEditableElement(tag, html = "", classes = []) {
+      const el = document.createElement(tag);
+      el.contentEditable = true;
+      el.innerHTML = html;
+      if (classes.length) el.classList.add(...classes);
+      return el;
+    }
+
+    function saveCurrentResume() {
+      if (!window.currentResumeId) return;
+      fetch("/save_resume/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+          resume_id: window.currentResumeId,
+          content: previewPanel.innerHTML,
+        }),
+      }).catch((err) => console.error("Error saving resume:", err));
+    }
+
+    // ===== Load / Render Resumes =====
+    function renderResumes(resumes) {
+      resumeList.innerHTML = "";
+      resumes.forEach((resume) => {
+        const card = document.createElement("div");
+        card.className =
+          "resume-card" +
+          (window.currentResumeId === resume.id ? " active" : "");
+        card.id = `resume-${resume.id}`;
+        card.innerHTML = `
+      <h3>${resume.title}</h3>
+      <p class="meta">Last edited: ${resume.updated_at}</p>
+      <div class="actions">
+        <button class="edit-btn">✏️ Edit</button>
+        <button class="delete-btn">🗑 Delete</button>
+      </div>
+      <button class="set-active">Set Active</button>
+    `;
+        resumeList.appendChild(card);
+      });
+    }
+
+    function loadResumes() {
+      fetch("/get_resumes/")
+        .then((res) => res.json())
+        .then((data) => renderResumes(data.resumes));
+    }
+
+    // ===== Set Active Resume =====
+    function setActiveResume(id) {
+      fetch(`/get_resume/${id}/`)
+        .then((res) => res.json())
+        .then((data) => {
+          previewPanel.innerHTML = data.text;
+          window.currentResumeId = data.id;
+          document
+            .querySelectorAll(".resume-card")
+            .forEach((c) => c.classList.remove("active"));
+          const activeCard = document.getElementById(`resume-${id}`);
+          if (activeCard) activeCard.classList.add("active");
+        });
+    }
+
+    // ===== Resume List Delegation =====
+    resumeList.addEventListener("click", (e) => {
+      const card = e.target.closest(".resume-card");
+      if (!card) return;
+      const id = parseInt(card.id.replace("resume-", ""));
+
+      if (e.target.classList.contains("set-active")) {
+        setActiveResume(id);
+      } else if (e.target.classList.contains("delete-btn")) {
+        if (!confirm("Are you sure you want to delete this resume?")) return;
+        fetch("/delete_resume/", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ resume_id: id }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              card.remove();
+              if (window.currentResumeId === id) {
+                previewPanel.innerHTML = "";
+                window.currentResumeId = null;
+              }
+            }
+          });
+      }
+    });
+
+    // ===== Create New Resume =====
+    createResumeBtn.addEventListener("click", () => {
+      const newTemplate = document.getElementById("resume-template").innerHTML;
+      fetch("/create_resume/", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: newTemplate }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          previewPanel.innerHTML = data.text;
+          window.currentResumeId = data.resume_id;
+          loadResumes();
+        });
+    });
+
+    // ===== Preview Panel Actions =====
+    // Autosave on typing
+    previewPanel.addEventListener("input", () => {
+      clearTimeout(autosaveTimeout);
+      autosaveTimeout = setTimeout(saveCurrentResume, 500);
+    });
+
+    // Delegated save on button interactions (move/add/delete)
+    previewPanel.addEventListener("click", (e) => {
+      const section = e.target.closest(".section");
+      if (!section) return;
+
+      const actionable = [
+        "move-up-btn",
+        "move-down-btn",
+        "add-job-btn",
+        "add-education-btn",
+        "add-skill-btn",
+        "add-project-btn",
+        "delete-job-btn",
+        "delete-education-btn",
+        "delete-skill-btn",
+        "delete-project-btn",
+      ];
+
+      if (actionable.some((cls) => e.target.classList.contains(cls))) {
+        setTimeout(saveCurrentResume, 0); // save after action
+      }
+    });
+
+    // ===== Section Movement =====
+    function moveSection(section, direction) {
+      const parent = section.parentNode;
+      if (
+        direction === "up" &&
+        section.previousElementSibling?.classList.contains("section")
+      ) {
+        parent.insertBefore(section, section.previousElementSibling);
+      } else if (
+        direction === "down" &&
+        section.nextElementSibling?.classList.contains("section")
+      ) {
+        parent.insertBefore(section.nextElementSibling, section);
+      }
+      updateMoveButtons();
+    }
+
+    function updateMoveButtons() {
+      document
+        .querySelectorAll(".preview-panel .section")
+        .forEach((sec, i, sections) => {
+          sec.querySelector(".move-up-btn").disabled = i === 0;
+          sec.querySelector(".move-down-btn").disabled =
+            i === sections.length - 1;
+        });
+    }
+
+    // Attach move buttons
+    previewPanel.addEventListener("click", (e) => {
+      if (e.target.classList.contains("move-up-btn"))
+        moveSection(e.target.closest(".section"), "up");
+      if (e.target.classList.contains("move-down-btn"))
+        moveSection(e.target.closest(".section"), "down");
+    });
+
+    // ===== Add / Delete Items =====
+    function addSectionItem(sectionSelector, itemClass, htmlTemplate) {
+      document.addEventListener("click", (e) => {
+        if (!e.target.matches(sectionSelector)) return;
+        const section = e.target.closest(".section");
         const content = section.querySelector(".content");
         const item = createEditableElement("div", htmlTemplate, [itemClass]);
         content.appendChild(item);
+        saveCurrentResume();
       });
-    });
-  }
-
-  function attachDeleteListener(selector, itemClass) {
-    document.addEventListener("click", (e) => {
-      if (e.target.classList.contains(selector)) {
-        e.target.closest(`.${itemClass}`).remove();
-      }
-    });
-  }
-
-  function moveSection(section, direction) {
-    const parent = section.parentNode;
-    if (
-      direction === "up" &&
-      section.previousElementSibling?.classList.contains("section")
-    ) {
-      parent.insertBefore(section, section.previousElementSibling);
-    } else if (
-      direction === "down" &&
-      section.nextElementSibling?.classList.contains("section")
-    ) {
-      parent.insertBefore(section.nextElementSibling, section);
     }
-    updateMoveButtons();
-  }
 
-  function updateMoveButtons() {
-    document
-      .querySelectorAll(".preview-panel .section")
-      .forEach((sec, i, sections) => {
-        sec.querySelector(".move-up-btn").disabled = i === 0;
-        sec.querySelector(".move-down-btn").disabled =
-          i === sections.length - 1;
+    function attachDeleteListener(buttonClass, itemClass) {
+      document.addEventListener("click", (e) => {
+        if (!e.target.classList.contains(buttonClass)) return;
+        e.target.closest(`.${itemClass}`)?.remove();
+        saveCurrentResume();
       });
-  }
+    }
 
-  // ===== Section Movement =====
-  document
-    .querySelectorAll(".move-up-btn")
-    .forEach((btn) =>
-      btn.addEventListener("click", () =>
-        moveSection(btn.closest(".section"), "up")
-      )
-    );
-  document
-    .querySelectorAll(".move-down-btn")
-    .forEach((btn) =>
-      btn.addEventListener("click", () =>
-        moveSection(btn.closest(".section"), "down")
-      )
-    );
-
-  // ===== Resume Card Actions =====
-  document.querySelectorAll(".resume-card .set-active").forEach((btn) =>
-    btn.addEventListener("click", () => {
-      document
-        .querySelectorAll(".resume-card")
-        .forEach((card) => card.classList.remove("active"));
-      btn.closest(".resume-card").classList.add("active");
-    })
-  );
-
-  document
-    .querySelectorAll(".resume-card .delete-btn")
-    .forEach((btn) =>
-      btn.addEventListener("click", () => btn.closest(".resume-card").remove())
-    );
-
-  // ===== Add Items =====
-  addSectionItem(
-    ".add-job-btn",
-    "job",
-    `
+    // Add buttons
+    addSectionItem(
+      ".add-job-btn",
+      "job",
+      `
   <p class="job-title">Job title @ company</p>
   <p class="job-meta">Location | Date 1 - Date 2</p>
   <ul><li>Describe responsibilities...</li></ul>
   <button class="delete-job-btn">✖</button>
 `
-  );
-
-  addSectionItem(
-    ".add-education-btn",
-    "education",
-    `
+    );
+    addSectionItem(
+      ".add-education-btn",
+      "education",
+      `
   <p class="degree">Degree, School</p>
   <p>Date 1 - Date 2</p>
   <button class="delete-education-btn">✖</button>
 `
-  );
-
-  addSectionItem(
-    ".add-skill-btn",
-    "skill-item",
-    `
+    );
+    addSectionItem(
+      ".add-skill-btn",
+      "skill-item",
+      `
   <p><strong>Category:</strong></p>
   <p>Skills</p>
   <button class="delete-skill-btn">✖</button>
 `
-  );
-
-  addSectionItem(
-    ".add-project-btn",
-    "project-item",
-    `
+    );
+    addSectionItem(
+      ".add-project-btn",
+      "project-item",
+      `
   <p><strong>Project title:</strong></p>
   <ul><li>Bullet point</li></ul>
   <button class="delete-project-btn">✖</button>
 `
-  );
+    );
 
-  // ===== Delete Items =====
-  attachDeleteListener("delete-job-btn", "job");
-  attachDeleteListener("delete-education-btn", "education");
-  attachDeleteListener("delete-skill-btn", "skill-item");
-  attachDeleteListener("delete-project-btn", "project-item");
-</script>
-{% endblock %}
+    // Delete buttons
+    attachDeleteListener("delete-job-btn", "job");
+    attachDeleteListener("delete-education-btn", "education");
+    attachDeleteListener("delete-skill-btn", "skill-item");
+    attachDeleteListener("delete-project-btn", "project-item");
+
+    // ===== Initial Load =====
+    document.addEventListener("DOMContentLoaded", loadResumes);
+  </script>
+  {% endblock %}
+</div>
