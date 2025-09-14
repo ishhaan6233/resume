@@ -431,74 +431,203 @@ footer {
   --brand-blue: #073c6a;
   --brand-blue-100: #f1f8fe;
   --shadow-xs: 0 0 1px rgba(23, 26, 31, 0.13), 0 0 2px rgba(23, 26, 31, 0.08);
+
+  /* layout guard */
+  max-width: 1200px;
+  margin-inline: auto;
+  /* thicker left & right padding; scales from 20px up to 48px */
+  padding-inline: clamp(20px, 4vw, 48px);
 }
 
-/* Two-column layout */
+/* two-column layout */
 .settings-page .settings-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
   gap: 24px;
+  align-items: start;         /* keep sidebar + card aligned at the top */
 }
 
-/* Sidebar */
+/* ---------- Sidebar ---------- */
 .settings-page .settings-sidebar {
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: var(--shadow-xs);
-  padding: 8px;
+  padding: 12px;
 }
 
 .settings-page .settings-link {
   display: block;
   padding: 10px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   color: #171a1f;
   text-decoration: none;
 }
+.settings-page .settings-link + .settings-link { margin-top: 6px; }
+.settings-page .settings-link:hover { background: #eef5fb; }
+.settings-page .settings-link.active { color: var(--brand-blue); background: var(--brand-blue-100); }
 
-.settings-page .settings-link + .settings-link {
-  margin-top: 6px;
-}
-
-.settings-page .settings-link.active {
-  color: var(--brand-blue);
-  background: var(--brand-blue-100);
-}
-
-.settings-page .settings-link:hover {
-  background: #eef5fb;
-}
-
-/* Main card */
+/* ---------- Main card ---------- */
 .settings-page .settings-card {
   background: #fff;
-  border-radius: 10px;
+  border: 1px solid #eef2ff;
+  border-radius: 12px;
   box-shadow: var(--shadow-xs);
+  margin-bottom: 28px;       /* prevents the “cut off at bottom” vibe */
 }
+.settings-page .settings-card .card-body { padding: 32px; }
 
-.settings-page .settings-card .card-body {
-  padding: 24px;
+.settings-page .form-label { font-weight: 600; }
+.settings-page .help-text { font-size: .92rem; color: #6c757d; }
+
+/* inputs (works with or without Bootstrap classes) */
+.settings-page input[type="text"],
+.settings-page input[type="email"],
+.settings-page input[type="number"],
+.settings-page textarea,
+.settings-page .form-control {
+  display: block;
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  line-height: 1.5;
+  transition: border-color .15s, box-shadow .15s, background .15s;
 }
+.settings-page input:focus,
+.settings-page textarea:focus,
+.settings-page .form-control:focus {
+  background: #fff;
+  border-color: #8ab4f8;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+}
+.settings-page .text-danger { font-size: .9rem; margin-top: .25rem; }
+.settings-page .btn-primary { border-radius: 10px; padding: .6rem 1rem; }
 
-/* Form tweaks */
-.settings-page .form-label {
+/* stop color input from collapsing due to the .form-control rules */
+.settings-page input[type="color"].form-control {
+  width: 72px;
+  height: 36px;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+.settings-page input[type="color"].form-control::-webkit-color-swatch-wrapper { padding: 0; }
+.settings-page input[type="color"].form-control::-webkit-color-swatch { border: none; border-radius: 8px; }
+
+/* grid fallback for your “row g-3” bits when Bootstrap grid isn’t active */
+.settings-page .row.g-3 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.settings-page .row.g-3 > * { width: 100%; }
+@media (max-width: 768px) { .settings-page .row.g-3 { grid-template-columns: 1fr; } }
+
+/* ---------- Application Categories polish ---------- */
+.settings-page .categories-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 1000px) { .settings-page .categories-grid { grid-template-columns: 1fr; } }
+
+.settings-page .category-card {
+  background: #fff;
+  border: 1px solid #eef2ff;
+  border-radius: 12px;
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.settings-page .category-card .card-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eef2ff;
+  background: #fafbff;
   font-weight: 600;
 }
-.settings-page .help-text {
-  font-size: 0.9rem;
-  color: #6c757d;
+.settings-page .category-card .card-body { padding: 16px; }
+
+.settings-page .category-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.settings-page .category-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+.settings-page .category-item .dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--dot, #64748b);
+  border: 2px solid #e2e8f0;
+}
+.settings-page .btn-icon {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  line-height: 1;
 }
 
-/* Make it stack on small screens */
+/* responsive: stack columns */
 @media (max-width: 768px) {
-  .settings-page .settings-layout {
-    grid-template-columns: 1fr;
-  }
+  .settings-page .settings-layout { grid-template-columns: 1fr; }
 }
 
-.recent_activity_item span {
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+/* --- Page gutter: more room on the right --- */
+.settings-page{
+  /* keep the left gutter modest, give the right one more space */
+  padding-left: clamp(16px, 3vw, 40px);
+  padding-right: clamp(32px, 6vw, 96px);
 }
+
+/* If your base layout also uses .container padding, this ensures our
+   page padding wins without touching global .container styles */
+.settings-page.container { padding-left: inherit; padding-right: inherit; }
+
+/* --- Categories list: never cut text, wrap nicely --- */
+.settings-page .category-item{
+  /* middle column can actually shrink so long strings wrap */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.settings-page .category-item .meta{
+  min-width: 0;                 /* allow shrinking inside the grid */
+}
+
+.settings-page .category-item .meta strong,
+.settings-page .category-item .meta .muted{
+  overflow-wrap: anywhere;      /* wrap long words like ALEERRRR… */
+  word-break: break-word;       /* fallback */
+}
+
+/* Optional: add a touch more padding inside each list row */
+.settings-page .category-item{ padding: 12px 14px; }
+
+/* Let the middle column actually shrink & wrap */
+.settings-page .category-item{
+  grid-template-columns: auto minmax(0,1fr) auto;
+}
+
+/* Works even if you don't have a .meta wrapper */
+.settings-page .category-item > :nth-child(2){
+  min-width: 0;                 /* allow shrink */
+}
+
+.settings-page .category-item > :nth-child(2),
+.settings-page .category-item > :nth-child(2) *{
+  overflow-wrap: anywhere;      /* wrap long words */
+  word-break: break-word;       /* fallback */
+}
+
+/* Optional: a touch more interior room in cards */
+.settings-page .settings-card .card-body{ padding-inline: clamp(24px, 3vw, 48px); }
+
