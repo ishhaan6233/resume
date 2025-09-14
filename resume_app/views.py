@@ -46,9 +46,8 @@ def applications(request):
 
 @login_required
 def responses(request):
-    responses_list = [
-        {"company": "a", "position": "b", "type": "c", "date": "x", "notes": "b", "next_action": "idk"},
-    ]
+    from .models import Response
+    responses_list = Response.objects.all().order_by('-date')
     return render(request, "responses.html", {"responses": responses_list})
 
 @login_required
