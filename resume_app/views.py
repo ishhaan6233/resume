@@ -33,8 +33,16 @@ def home(request):
 # Applications list with filtering
 @login_required
 def applications(request):
-    applications_list = JobApplication.objects.filter(user=request.user).order_by('-date_applied')
-    return render(request, "applications.html", {"applications":applications_list})
+    status_filter = request.GET.get("status")
+    if status_filter and status_filter != "all":
+        applications_list = JobApplication.objects.filter(status=status_filter).order_by("-date_applied")
+    else:
+        applications_list = JobApplication.objects.all().order_by("-date_applied")
+
+    return render(request, "applications.html", {
+        "applications": applications_list,
+        "active_filter": status_filter or "all"
+    })
 
 @login_required
 def responses(request):
