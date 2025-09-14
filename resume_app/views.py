@@ -9,6 +9,7 @@ from .models import Resume
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.db.models import Count
 
 
 # Landing page
@@ -452,6 +453,33 @@ def add_resume(request):
         return redirect("resumes")
 
     return render(request, "add_resume.html")
+
+def metrics(request):
+    # Applications grouped by status
+    status_counts = (
+        JobApplication.objects.values("status")
+        .annotate(count=Count("id"))
+        .order_by()
+    )
+    status_labels = [s["status"] for s in status_counts]
+    status_data = [s["count"] for s in status_counts]
+
+    # Top companies applied to
+    company_counts = (
+        JobApplication.objects.values("company")
+        .annotate(count=Count("id"))
+        .order_by("-count")[:5]  # top 5 companies
+    )
+    company_labels = [c["company"] for c in company_counts]
+    company_data = [c["count"] for c in company_counts]
+
+    context = {
+        "status_labels": status_labels,
+        "status_data": status_data,
+        "company_labels": company_labels,
+        "company_data": company_data,
+    }
+    return render(request, "metrics.html", context)
 
 # Settings Views
 

@@ -17,10 +17,12 @@
       <h3 class="font-semibold mb-2">Top Companies Applied</h3>
       <canvas id="companyChart"></canvas>
     </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  // Status Pie Chart
+  // Status Doughnut Chart
   new Chart(document.getElementById("statusChart"), {
     type: "doughnut",
     data: {
@@ -29,10 +31,18 @@
         data: {{ status_data|safe }},
         backgroundColor: ["#2563eb","#22c55e","#f97316","#ef4444"]
       }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true
     }
   });
 
-  // Company Bar Chart
+  // Company Bar Chart with different colors per bar and integer y-axis
+  const companyColors = [
+    "#2563eb", "#22c55e", "#f97316", "#ef4444", "#a855f7"
+  ];
+
   new Chart(document.getElementById("companyChart"), {
     type: "bar",
     data: {
@@ -40,10 +50,21 @@
       datasets: [{
         label: "Applications",
         data: {{ company_data|safe }},
-        backgroundColor: "#2563eb"
+        backgroundColor: companyColors.slice(0, {{ company_labels|length }})
       }]
     },
-    options: { scales: { y: { beginAtZero: true } } }
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0  // ensures only integer labels
+          }
+        }
+      }
+    }
   });
 </script>
 {% endblock %}
