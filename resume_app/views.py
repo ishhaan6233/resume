@@ -47,8 +47,15 @@ def applications(request):
 @login_required
 def responses(request):
     from .models import Response
-    responses_list = Response.objects.all().order_by('-date')
-    return render(request, "responses.html", {"responses": responses_list})
+    active_filter = request.GET.get('type', 'all')
+    if active_filter == 'all':
+        responses_list = Response.objects.all().order_by('-date')
+    else:
+        responses_list = Response.objects.filter(type=active_filter).order_by('-date')
+    return render(request, "responses.html", {
+        "responses": responses_list,
+        "active_filter": active_filter
+    })
 
 @login_required
 def resumes(request):
