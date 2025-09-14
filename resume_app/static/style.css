@@ -988,3 +988,50 @@ button.btn-outline, button.btn-secondary {
   border-bottom: 1px solid var(--border) !important;
   color: var(--text) !important;
 }
+
+/* --- Dark-mode fix: Add Application panel & lingering light bits --- */
+
+/* The big form panel on /applications/add/ (hit a bunch of likely wrappers) */
+.add-application,
+.add-application-card,
+.application-form,
+.application-form-card,
+.form-wrapper,
+.form-card {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25) !important;
+  border-radius: 12px;
+}
+
+/* Make sure the section title inside that panel is visible in dark mode */
+.add-application h1,
+.application-form h1 { color: var(--text) !important; }
+
+/* Inputs are already themed globally, but ensure placeholders read well */
+.add-application ::placeholder,
+.application-form ::placeholder { color: var(--muted) !important; }
+
+/* Status select on the form (sometimes gets default UA styles) */
+.add-application select,
+.application-form select {
+  background: var(--input-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--input-border) !important;
+}
+
+/* Settings → Application Categories: make the list header stop being white */
+.settings-page .category-card .card-header {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* And the category rows themselves */
+.settings-page .category-item {
+  background: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--text) !important;
+}
+.settings-page .category-item .muted { color: var(--muted) !important; }
