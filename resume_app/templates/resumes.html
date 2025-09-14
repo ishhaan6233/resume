@@ -11,31 +11,52 @@ JobJourney{% endblock %} {% block content %}
 
     <!-- Toolbar -->
 
-    <button class="create-btn">＋ Create New Tailored Resume</button>
+    <a href="{% url 'add_resume' %}" class="create-btn"
+      >＋ Create New Tailored Resume</a
+    >
 
     <!-- Resume Cards -->
     {% for resume in resumes %}
-    <div
-      class="resume-card {% if resume.status == 'Active' %}active{% endif %}">
+    <div class="resume-card {% if resume.is_active %}active{% endif %}">
       <h3>{{ resume.name }}</h3>
-      <div class="meta">Last Modified: {{ resume.updated }}</div>
-      <div class="meta">Status: {{ resume.status }}</div>
+      <div class="meta">
+        Last Modified: {{ resume.updated_at|date:'M d, Y' }}
+      </div>
+      <div class="meta">Created: {{ resume.created_at|date:'M d, Y' }}</div>
 
-      {% if resume.status == "Active" %}
+      {% if resume.is_master %}
+      <span class="badge">Master</span>
+      {% endif %} {% if resume.is_active %}
       <span class="badge">Active</span>
       {% endif %}
 
       <div class="actions">
-        <!-- <a"
-          title="Download PDF"
+        <a
+          href="{% url 'edit_resume' resume_id=resume.id %}"
+          title="Edit"
           class="btn"
-          >⬇️ Download PDF</a
-        > -->
-        <button title="Delete">🗑️</button>
-        {% if resume.status != "Active" %}
-        <button class="set-active">Set Active</button>
+          >✏️ Edit</a
+        >
+        <a
+          href="{% url 'delete_resume' resume_id=resume.id %}"
+          title="Delete"
+          class="btn"
+          onclick="return confirm('Are you sure you want to delete this resume?');"
+          >🗑️ Delete</a
+        >
+        {% if not resume.is_active %}
+        <a
+          href="{% url 'set_active_resume' resume_id=resume.id %}"
+          class="set-active btn"
+          >Set Active</a
+        >
         {% endif %}
       </div>
+    </div>
+    {% empty %}
+    <div class="resume-card">
+      <h3>No resumes yet</h3>
+      <p>Create your first resume to get started!</p>
     </div>
     {% endfor %}
   </div>
