@@ -66,6 +66,30 @@ def responses(request):
     })
 
 @login_required
+def add_communication(request):
+    from .models import Response  # you can move this to top imports
+    if request.method == "POST":
+        company = request.POST.get("company")
+        position = request.POST.get("position")
+        comm_type = request.POST.get("type")
+        date = request.POST.get("date")
+        notes = request.POST.get("notes")
+        next_action = request.POST.get("next_action")
+
+        Response.objects.create(
+            company=company,
+            position=position,
+            type=comm_type,
+            date=date,
+            notes=notes,
+            next_action=next_action,
+        )
+        messages.success(request, "Communication added successfully!")
+        return redirect("responses")  # use the named route instead of hardcoding
+
+    return render(request, "add_communication.html", {"today": timezone.now().date()})
+
+@login_required
 def resumes(request):
     resumes_list = [
         {

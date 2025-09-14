@@ -18,4 +18,5 @@ urlpatterns = [
     path("applications/add/", views.add_application, name="add_application"),
     path("applications/delete/<int:app_id>/", views.delete_application, name="delete_application"),
     path("settings/", views.settings_view, name="settings"),
+    path("communications/add/", views.add_communication, name="add_communication"),
 ]
