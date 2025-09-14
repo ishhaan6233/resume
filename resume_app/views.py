@@ -154,8 +154,8 @@ def get_resumes(request):
         {
             "id": r.id,
             # or store a title field if you have one
-            "title": f"Resume {r.id}",
-            "updated_at": r.updated_at.strftime("%b %Y"),
+            "title": r.title,
+            "updated_at": r.updated_at.strftime("%b %d, %Y"),
         }
         for r in resumes
     ]
@@ -167,7 +167,7 @@ def get_resume(request, resume_id):
     return JsonResponse({
         "id": resume.id,
         "text": resume.text,
-        "updated_at": resume.updated_at.strftime("%b %Y")
+        "updated_at": resume.updated_at.strftime("%b %d, %Y")
     })
 
 
@@ -349,11 +349,13 @@ def delete_response(request, response_id):
 @require_POST
 def create_resume(request):
     data = json.loads(request.body)
-    content = data.get("text", "")
+    text = data.get("text", "")
+    title = data.get("title", "Untitled Resume")
 
     resume = Resume.objects.create(
         user=request.user,
-        text=content
+        text=text,
+        title=title
     )
 
     return JsonResponse({
@@ -363,16 +365,37 @@ def create_resume(request):
     })
 
 
-@csrf_exempt  # or better: use @csrf_protect with proper token
+@csrf_exempt
 @require_POST
 def save_resume(request):
-    data = json.loads(request.body)
-    resume_id = data.get("resume_id")
-    content = data.get("content")
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-    resume = Resume.objects.get(id=resume_id, user=request.user)
-    resume.text = content
-    resume.save()
+    resume_id = data.get("resume_id")
+    if not resume_id:
+        return JsonResponse({"error": "Missing resume_id"}, status=400)
+
+    try:
+        resume = Resume.objects.get(id=resume_id, user=request.user)
+    except Resume.DoesNotExist:
+        return JsonResponse({"error": "Resume not found"}, status=404)
+
+    # Only update fields if provided
+    text = data.get("text")
+    title = data.get("title")
+
+    updated = False
+    if text is not None:
+        resume.text = text
+        updated = True
+    if title is not None:
+        resume.title = title
+        updated = True
+
+    if updated:
+        resume.save()
 
     return JsonResponse({"status": "ok"})
 
