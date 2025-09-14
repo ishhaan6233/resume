@@ -1,5 +1,9 @@
 {% extends "base.html" %} {% load static %} {% block title %}Resumes -
 JobJourney{% endblock %} {% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <div class="page">
   <!-- Left Panel: Resume list -->
   <div class="left-panel">
@@ -12,8 +16,8 @@ JobJourney{% endblock %} {% block content %}
   <div class="preview-panel" id="preview-panel"></div>
 
   <div id="resume-template" style="display: none">
-    <div class="preview-header" contenteditable="true">
-      <h2>Name</h2>
+    <div class="preview-header">
+      <h2 contenteditable="true">Name</h2>
       <button id="download-pdf" data-html2canvas-ignore>
         ⬇ Download as PDF
       </button>
@@ -407,6 +411,37 @@ JobJourney{% endblock %} {% block content %}
           window.currentResumeId = data.resume_id;
           loadResumes();
         });
+    });
+
+    document.addEventListener("click", async (e) => {
+      if (e.target.id !== "download-pdf") return;
+      console.log("poo");
+
+      if (!window.currentResumeId) return alert("No resume selected");
+
+      const preview = document.getElementById("preview-panel");
+      const { jsPDF } = window.jspdf;
+
+      const canvas = await html2canvas(preview, {
+        scale: 2,
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "pt", "a4");
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+      const activeCard = document.querySelector(".resume-card.active");
+      const title =
+        activeCard?.querySelector(".resume-title")?.innerText || "resume";
+
+      pdf.save(`${title}.pdf`);
     });
 
     // ===== Initial Load =====
