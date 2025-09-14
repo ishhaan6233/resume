@@ -2,7 +2,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.home, name="home"),
+    # Landing page
+    path("", views.landing, name="landing"),
+    
+    # Authentication
+    path("login/", views.login_view, name="login"),
+    path("register/", views.register_view, name="register"),
+    path("logout/", views.logout_view, name="logout"),
+    
+    # Protected pages
+    path("dashboard/", views.home, name="home"),
     path("applications/", views.applications_view, name="applications"),
     path("resumes/", views.resumes, name="resumes"),
     path("responses/", views.responses, name="responses"),

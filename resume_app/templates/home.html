@@ -2,8 +2,12 @@
 {% block content %}
 <!-- Greeting -->
 <section class="greeting">
-  <p>Friday, October 27th</p>
-  <h1>Good Morning, Ishaan</h1>
+  <p>{% now "l, F jS" %}</p>
+  <h1>
+    Good {% if "06" <= now|date:"H" and now|date:"H" < "12" %} Morning {% elif
+    "12" <= now|date:"H" and now|date:"H" < "17" %} Afternoon {% else %} Evening
+    {% endif %}, {{ user.first_name|default:user.username }}
+  </h1>
 </section>
 
 <!-- Application Overview -->

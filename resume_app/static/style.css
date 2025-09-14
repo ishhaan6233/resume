@@ -1,7 +1,7 @@
 /* General Styles */
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background: #f8f9fc;
   color: #333;
 }
@@ -35,10 +35,66 @@ body {
 }
 
 .profile {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: url('https://via.placeholder.com/40') no-repeat center/cover;
+  display: flex;
+  align-items: center;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.logout-btn {
+  background: #e53e3e;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #c53030;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-nav {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-nav:first-child {
+  color: #2a6df4;
+  border: 1px solid #2a6df4;
+}
+
+.btn-nav:first-child:hover {
+  background: #2a6df4;
+  color: white;
+}
+
+.btn-nav:last-child {
+  background: #2a6df4;
+  color: white;
+}
+
+.btn-nav:last-child:hover {
+  background: #1e5bb8;
 }
 
 /* Greeting */
@@ -64,7 +120,7 @@ body {
   padding: 1.5rem;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .card .number {
@@ -87,11 +143,12 @@ body {
   padding: 2rem;
 }
 
-.recent-activity, .quick-actions {
+.recent-activity,
+.quick-actions {
   background: #fff;
   padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .section-header {
@@ -223,7 +280,7 @@ footer {
   background: #fff;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .applications-table th,
@@ -241,22 +298,20 @@ footer {
 
 /* --- Responses Page Styles --- */
 
-
 /* Responses Container */
 .responses-container {
-  position: absolute; 
-  top: 212px; 
-  left: 112px; 
-  width: 1216px; 
-  height: 516px; 
-  background: #FFFFFF; /* white - fully opaque */
-  border-radius: 10px; 
-  border-width: 1px; 
-  border-color: #DEE1E6; /* neutral-300 */
-  border-style: solid; 
-  box-shadow: 
-    0px 0px 1px rgba(23, 26, 31, 0.86), /* #171a1fD roughly 86% opacity */
-    0px 0px 2px rgba(23, 26, 31, 0.08); /* #171a1f14 roughly 8% opacity */
+  position: absolute;
+  top: 212px;
+  left: 112px;
+  width: 1216px;
+  height: 516px;
+  background: #ffffff; /* white - fully opaque */
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: #dee1e6; /* neutral-300 */
+  border-style: solid;
+  box-shadow: 0px 0px 1px rgba(23, 26, 31, 0.86),
+    /* #171a1fD roughly 86% opacity */ 0px 0px 2px rgba(23, 26, 31, 0.08); /* #171a1f14 roughly 8% opacity */
 }
 
 /* Resonses Logs */
@@ -266,7 +321,7 @@ footer {
   background: #fff;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .responses-table th,
@@ -281,7 +336,6 @@ footer {
   font-weight: 600;
   color: #555;
 }
-
 
 /* Status Labels */
 .status {
@@ -328,7 +382,8 @@ footer {
 }
 
 /* Make the whole page stretch to full height */
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -351,9 +406,9 @@ footer {
 
 /* Scope everything under .settings-page so we don't fight Bootstrap */
 .settings-page {
-  --brand-blue: #073C6A;
-  --brand-blue-100: #F1F8FE;
-  --shadow-xs: 0 0 1px rgba(23,26,31,.13), 0 0 2px rgba(23,26,31,.08);
+  --brand-blue: #073c6a;
+  --brand-blue-100: #f1f8fe;
+  --shadow-xs: 0 0 1px rgba(23, 26, 31, 0.13), 0 0 2px rgba(23, 26, 31, 0.08);
 }
 
 /* Two-column layout */
@@ -377,18 +432,22 @@ footer {
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  color: #171A1F;
+  color: #171a1f;
   text-decoration: none;
 }
 
-.settings-page .settings-link + .settings-link { margin-top: 6px; }
+.settings-page .settings-link + .settings-link {
+  margin-top: 6px;
+}
 
 .settings-page .settings-link.active {
   color: var(--brand-blue);
   background: var(--brand-blue-100);
 }
 
-.settings-page .settings-link:hover { background: #eef5fb; }
+.settings-page .settings-link:hover {
+  background: #eef5fb;
+}
 
 /* Main card */
 .settings-page .settings-card {
@@ -397,11 +456,18 @@ footer {
   box-shadow: var(--shadow-xs);
 }
 
-.settings-page .settings-card .card-body { padding: 24px; }
+.settings-page .settings-card .card-body {
+  padding: 24px;
+}
 
 /* Form tweaks */
-.settings-page .form-label { font-weight: 600; }
-.settings-page .help-text { font-size: .9rem; color: #6c757d; }
+.settings-page .form-label {
+  font-weight: 600;
+}
+.settings-page .help-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
 
 /* Make it stack on small screens */
 @media (max-width: 768px) {
