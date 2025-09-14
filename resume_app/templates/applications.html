@@ -1,4 +1,21 @@
 {% extends "base.html" %} {% block title %}Applications - JobJourney{% endblock %} {% block content %}
+
+<style>
+    .notes-box {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+
+    max-height: 100px; /* vertical cap */
+    width: 200px; /* constrain width so text wraps */
+    overflow-y: auto; /* vertical scroll if needed */
+    overflow-x: hidden; /* prevent horizontal overflow */
+    white-space: pre-line; /* preserve line breaks */
+    word-break: break-word; /* wrap long words */
+    display: block; /* ensures width/height apply */
+  }
+</style>
+
 <h1>Job Applications</h1>
 
 <!-- Tabs -->
@@ -69,7 +86,9 @@
       <td>{{ app.position }}</td>
       <td>{{ app.date_applied|date:'M d, Y' }}</td>
       <td><span class="status {{ app.status }}">{{ app.status }}</span></td>
-      <td>{{ app.notes }}</td>
+      <td>
+          <div class="notes-box">{{ app.notes|default:"N/A" }}</div>
+        </td>
       <td>
         <a
           href="{% url 'delete_application' app_id=app.id %}"
