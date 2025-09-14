@@ -18,7 +18,6 @@ def landing(request):
 
 # Dashboard / Home
 
-
 @login_required
 def home(request):
     # Get user's applications
@@ -563,3 +562,4 @@ def delete_category(request, category_id):
     category.delete()
     messages.success(request, 'Category deleted successfully!')
     return redirect("settings_categories")
+
