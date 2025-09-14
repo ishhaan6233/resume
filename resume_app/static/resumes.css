@@ -644,81 +644,141 @@ body { background: var(--bg) !important; color: var(--text) !important; }
 .contact a,
 .projects a { color: var(--link) !important; }
 
-/* --- THEME OVERRIDES FOR RESUMES PAGE ---------------------------- */
+/* -------------------------
+   SCREEN THEMING (browser)
+   ------------------------- */
+@media screen {
 
-/* Use app theme tokens instead of hard-coded light colors */
-.page { background: transparent; }
+  /* Surfaces & text via theme tokens */
+  body { background: var(--bg) !important; color: var(--text) !important; }
 
-.left-panel h2,
-.resume-card h3,
-.resume-card .meta,
-.preview-header h2 { color: var(--text); }
+  .navbar {
+    background: var(--panel) !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+  .navbar .logo,
+  .navbar .menu a { color: var(--text) !important; }
+  .navbar .menu a.active { color: var(--primary) !important; }
 
-.resume-card,
-.section,
-.section .content {
-  background: var(--panel);
-  border-color: var(--border);
-  color: var(--text);
+  .resume-card,
+  .preview-panel,
+  .section,
+  .section .content {
+    background: var(--panel) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+  }
+  .resume-card .meta,
+  .job-meta { color: var(--muted) !important; }
+
+  .preview-panel hr { border-top: 1px solid var(--border) !important; }
+
+  .toolbar .tab {
+    background: var(--panel) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+  }
+  .toolbar .tab.active {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #fff !important;
+  }
+
+  /* “Create/Add” buttons – give a simple fallback, then enhance if supported */
+  .create-btn,
+  .add-item-btn,
+  .add-job-btn,
+  .add-education-btn,
+  .add-skill-btn,
+  .add-project-btn {
+    background: #eaf2ff !important;        /* fallback for old engines */
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+  }
+  @supports (background: color-mix(in srgb, #000 0%, #fff 100%)) {
+    .create-btn,
+    .add-item-btn,
+    .add-job-btn,
+    .add-education-btn,
+    .add-skill-btn,
+    .add-project-btn {
+      background:   background: #eaf2ff !important;
+      border: 1px dashed #0f74c7 !important;   
+      color: #0f74c7 !important;
+    }
+    .create-btn:hover,
+    .add-item-btn:hover,
+    .add-job-btn:hover,
+    .add-education-btn:hover,
+    .add-skill-btn:hover,
+    .add-project-btn:hover {
+      background: #dbe8ff !important;
+}
+  }
+
+  .resume-card .set-active,
+  .resume-card .delete-btn,
+  .resume-card .actions button {
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--muted) !important;
+  }
+  .resume-card .delete-btn:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+  }
+  .resume-card .set-active:hover { border-color: var(--primary) !important; color: var(--primary) !important; }
+
+  .section h3,
+  .resume-card .badge,
+  .preview-header button {
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-color: var(--primary) !important;
+  }
+
+  .contact { color: var(--text) !important; }
+  .contact a,
+  .projects a { color: var(--link) !important; }
 }
 
-/* Make the right preview panel theme-aware */
-.preview-panel{
-  background: var(--panel);
-  color: var(--text);
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 8px rgba(0,0,0,.20);
-}
+/* -------------------------
+   PRINT / PDF (no variables)
+   ------------------------- */
 
-.preview-panel hr { border-top: 1px solid var(--border); }
+@media print {
+  /* Page size & margins for Letter; change to A4 if you prefer */
+  @page { size: Letter; margin: 0.5in; }
 
-/* Headings inside resume sections use your primary color */
-.section h3 { background: var(--primary); color: #fff; }
+  html, body { background: #ffffff !important; color: #111827 !important; }
 
-/* Links (contact / projects) tint */
-.contact a,
-.projects a { color: var(--primary); }
+  /* Hide chrome around the preview; keep only the resume */
+  .navbar, .toolbar, .left-panel, .resume-card { display: none !important; }
 
-/* Create button & minor accents */
-.create-btn{
-  background: color-mix(in srgb, var(--primary) 12%, var(--panel));
-  border-color: var(--primary);
-  color: var(--primary);
-}
-.create-btn:hover{
-  background: color-mix(in srgb, var(--primary) 18%, var(--panel));
-}
+  /* Make the preview the printed content */
+  .preview-panel {
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
 
-/* Card action buttons honor theme and remain readable even when disabled */
-.resume-card .set-active,
-.resume-card .delete-btn{
-  background: var(--input-bg);
-  border-color: var(--input-border);
-  color: var(--text);
-}
-.resume-card .set-active:hover{
-  border-color: var(--primary);
-  color: var(--primary);
-}
-.resume-card .delete-btn:hover{
-  background: #dc2626;
-  border-color: #dc2626;
-  color: #fff;
-}
-/* Disabled state: visible text */
-.resume-card .set-active:disabled,
-.resume-card .delete-btn:disabled{
-  opacity: .85;
-  color: var(--muted);
-  background: var(--panel);
-  border-color: var(--border);
-}
+  .section {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  .section .content {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+  }
+  .section h3 { background: #0f74c7 !important; color: #ffffff !important; }
 
-/* Inputs inside resumes page follow theme */
-.preview-panel input,
-.preview-panel textarea,
-.preview-panel select{
-  background: var(--input-bg);
-  color: var(--text);
-  border-color: var(--input-border);
+  .preview-panel hr { border-top: 1px solid #e5e7eb !important; }
+  .contact a, .projects a { color: #0f74c7 !important; text-decoration: none; }
 }
