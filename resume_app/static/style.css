@@ -1035,3 +1035,45 @@ button.btn-outline, button.btn-secondary {
   color: var(--text) !important;
 }
 .settings-page .category-item .muted { color: var(--muted) !important; }
+
+/* Date input: make it readable in dark + match theme */
+input[type="date"] {
+  color: var(--text);
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  font-family: inherit; /* keep Inter */
+}
+
+/* Tell browsers to use their dark popover when we're in dark */
+:root[data-theme-resolved="dark"] input[type="date"] {
+  color-scheme: dark; /* also affects the popup calendar */
+}
+
+/* WebKit/Blink date text parts (Chrome/Edge) */
+input[type="date"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: var(--text);
+}
+
+/* When empty, Chrome renders a fake placeholder via the edit area */
+input[type="date"]:not(:focus):invalid::-webkit-datetime-edit {
+  color: var(--muted);
+  opacity: 1; /* avoid extra dimming */
+}
+
+/* Calendar icon – brighten for dark backgrounds */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) saturate(.6);
+  opacity: .9;
+}
+
+/* Disabled state still readable */
+input[type="date"]:disabled {
+  color: var(--muted) !important;
+  background: var(--input-bg) !important;
+  opacity: 1 !important;
+}
+
