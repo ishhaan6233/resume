@@ -1,7 +1,7 @@
 /* ===== General ===== */
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background: #f8f9fc;
   color: #111827;
 }
@@ -112,7 +112,7 @@ body {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   position: relative;
   margin-bottom: 1rem;
 }
@@ -185,7 +185,26 @@ body {
   background: #fff;
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  /* Letter size in pixels at 96dpi */
+  width: 816px; /* 8.5in */
+  height: 1056px; /* 11in */
+
+  /* Height like A4 ratio */
+  aspect-ratio: 1 / 1.414; /* 1:√2 ≈ A4 ratio */
+  overflow: hidden;
+
+  /* Center in parent */
+  margin: 0 auto;
+
+  box-sizing: border-box;
+
+  font-size: 11px;
+}
+
+.preview-panel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 .preview-header {
@@ -196,7 +215,7 @@ body {
 }
 
 .preview-header h2 {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 700;
   margin: 0;
 }
@@ -208,7 +227,7 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -228,9 +247,9 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   gap: 1.2rem;
-  font-size: 0.9rem;
+  font-size: 12px;
   color: #374151;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .contact a {
@@ -243,11 +262,6 @@ body {
   text-decoration: underline;
 }
 
-/* Section blocks */
-.section {
-  margin-top: 1.5rem;
-}
-
 .section h3 {
   background: #0f74c7;
   color: #fff;
@@ -255,20 +269,12 @@ body {
   border-radius: 4px;
   font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 0.8rem;
-}
-
-/* Content box inside sections */
-.section .content {
-  background: #f9fafb;
-  padding: 1rem;
-  border-radius: 6px;
+  margin-bottom: 0;
 }
 
 .section p,
 .section li {
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 11px;
   margin: 0.4rem 0;
 }
 
@@ -293,7 +299,7 @@ body {
 /* Education */
 .education p {
   margin: 0.2rem 0;
-  font-size: 0.9rem;
+  font-size: 11px;
 }
 
 .education .degree {
@@ -304,7 +310,7 @@ body {
 .skills-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .skills-grid p {
@@ -332,4 +338,239 @@ body {
   .page {
     grid-template-columns: 1fr;
   }
+}
+
+.skill-item,
+.project-item {
+  position: relative;
+  padding-right: 30px; /* space for delete button */
+  margin-bottom: 0.8rem;
+}
+
+.page {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+}
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.create-btn,
+.add-education-btn {
+  padding: 0.6rem;
+  border: 1px dashed #0f74c7;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.section h3 {
+  margin-top: 0;
+}
+
+.content {
+  position: relative; /* for absolute positioning */
+  padding-bottom: 3rem; /* space for button so it doesn’t overlap content */
+  /* make hover work even if content is empty */
+  min-height: 50px;
+}
+
+/* Add Job button */
+.add-job-btn,
+.add-education-btn,
+.add-skill-btn,
+.add-project-btn {
+  position: absolute;
+  bottom: -0.5rem; /* distance from bottom of content */
+  left: 50%; /* center horizontally */
+  transform: translateX(-50%);
+  padding: 0.4rem 0.8rem;
+  border: 1px dashed #0f74c7;
+  background: #f0f7ff;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0; /* hidden by default */
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.education {
+  margin-bottom: 2rem;
+}
+
+#experience:hover .add-job-btn,
+#education:hover .add-education-btn,
+#skills:hover .add-skill-btn,
+#projects:hover .add-project-btn {
+  opacity: 1; /* show on hover */
+}
+
+.add-job-btn:hover {
+  background: #e0f0ff;
+}
+
+.delete-job-btn {
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.job,
+.education {
+  position: relative;
+  padding-right: 40px; /* space for delete button */
+  margin-bottom: 0.3rem;
+}
+
+.delete-job-btn,
+.delete-education-btn,
+.delete-skill-btn,
+.delete-project-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: #ef4444;
+  color: white;
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.job:hover .delete-job-btn,
+.education:hover .delete-education-btn,
+.skill-item:hover .delete-skill-btn,
+.project-item:hover .delete-project-btn {
+  opacity: 1;
+}
+
+.education:hover {
+  color: black;
+}
+
+.delete-job-btn:hover,
+.delete-education-btn:hover {
+  background: #b91c1c;
+}
+
+.add-item-btn {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border: 1px dashed #0f74c7;
+  background: #f0f7ff;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.resume-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+.resume-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+.resume-card .meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.4rem;
+}
+.resume-card .actions {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.6rem;
+}
+.resume-card .actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #6b7280;
+}
+.resume-card .actions button:hover {
+  color: #0f74c7;
+}
+.resume-card .set-active {
+  margin-left: auto;
+  font-size: 0.8rem;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+.resume-card .set-active:hover {
+  border-color: #0f74c7;
+  color: #0f74c7;
+}
+
+.section .content {
+  margin-top: 0;
+  min-height: 40px;
+  background: #f9fafb;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+.section {
+  margin-top: 0.8rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  /* padding: 1rem; */
+  position: relative;
+}
+
+/* Floating left-side arrow buttons */
+.section-controls {
+  position: absolute;
+  left: -30px; /* outside section border */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+
+.section:hover .section-controls {
+  opacity: 1;
+}
+
+.section-controls button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #0f74c7;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.section-controls button:hover {
+  background: #0c5ba0;
 }
