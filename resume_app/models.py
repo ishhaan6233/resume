@@ -1,17 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-class Response(models.Model):
-    company = models.CharField(max_length=255)
-    position = models.CharField(max_length=255)
-    type = models.CharField(max_length=50)
-    date = models.DateField()
-    notes = models.TextField(blank=True, null=True)
-    next_action = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.company} - {self.position} ({self.type})"
     
 class Application(models.Model):
     company = models.CharField(max_length=255)
@@ -60,6 +48,28 @@ class JobApplication(models.Model):
     def __str__(self):
         return f"{self.company} - {self.position}"
 
+class Response(models.Model):
+    """Model for tracking communication responses from companies"""
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='responses')
+    job_application = models.ForeignKey(
+        JobApplication, on_delete=models.CASCADE, related_name='responses', null=True, blank=True)
+    company = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    response_type = models.CharField(max_length=50, choices=[
+        ("Interview", "Interview"),
+        ("Offer", "Offer"),
+        ("Rejection", "Rejection"),
+        ("Follow-up", "Follow-up"),
+        ("Other", "Other"),
+    ])
+    date = models.DateField()
+    notes = models.TextField(blank=True, null=True)
+    next_action = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.company} - {self.response_type}"
 
 class Response(models.Model):
     """Model for tracking communication responses from companies"""
