@@ -58,7 +58,18 @@
 <!-- Action bar -->
 <div class="actions">
   <a href="#" class="btn">+ Add Communication Entry</a>
-  <input type="text" class="search" placeholder="Search responses..." />
+  <form method="get" style="flex: 1; display: flex">
+    <input
+      type="text"
+      name="search"
+      value="{{ search_query }}"
+      class="search"
+      placeholder="Search responses..."
+      style="flex: 1; margin-right: 8px"
+    />
+    <input type="hidden" name="type" value="{{ active_filter }}" />
+    <button type="submit" class="btn" style="min-width: 100px">Search</button>
+  </form>
 </div>
 
 <!-- Responses Wrapper -->

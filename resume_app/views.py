@@ -48,13 +48,21 @@ def applications(request):
 def responses(request):
     from .models import Response
     active_filter = request.GET.get('type', 'all')
+    search_query = request.GET.get('search', '').strip()
     if active_filter == 'all':
         responses_list = Response.objects.all().order_by('-date')
     else:
         responses_list = Response.objects.filter(type=active_filter).order_by('-date')
+    if search_query:
+        responses_list = responses_list.filter(
+            company__icontains=search_query
+        ) | responses_list.filter(
+            position__icontains=search_query
+        )
     return render(request, "responses.html", {
         "responses": responses_list,
-        "active_filter": active_filter
+        "active_filter": active_filter,
+        "search_query": search_query
     })
 
 @login_required
