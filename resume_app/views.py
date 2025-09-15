@@ -17,7 +17,6 @@ def landing(request):
     return render(request, "landing.html")
 
 # Dashboard / Home
-
 @login_required
 def home(request):
     # Get user's applications
