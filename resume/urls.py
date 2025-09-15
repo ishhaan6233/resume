@@ -22,4 +22,6 @@ from resume_app import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("resume_app.urls")),
+    # Google / Social Auth (allauth provides /accounts/...)
+    path("accounts/", include("allauth.urls")),
 ]

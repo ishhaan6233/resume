@@ -38,9 +38,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "resume_app",
+    "django.contrib.sites",   # required for allauth
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
 
-STATIC_URL = '/static/'
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",   # default
+    "allauth.account.auth_backends.AuthenticationBackend",  # allauth
+]
+
+LOGIN_REDIRECT_URL = "/"       # after successful login
+LOGOUT_REDIRECT_URL = "/login/"  # after logout
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -48,9 +60,24 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True # Auto login on social account signup 
+
+ACCOUNT_EMAIL_REQUIRED = True # Require email for all users
+ACCOUNT_UNIQUE_EMAIL = True # Ensure unique emails
+
+# Prevent login without verified email (optional but recommended)
+ACCOUNT_EMAIL_VERIFICATION = "optional"  # or "mandatory"
+ACCOUNT_AUTHENTICATION_METHOD = "username_email" # Allow login with username or email
+ACCOUNT_USERNAME_REQUIRED = True # Require username for all users
+
+SITE_ID = 4
+STATIC_URL = '/static/'
 
 ROOT_URLCONF = "resume.urls"
 

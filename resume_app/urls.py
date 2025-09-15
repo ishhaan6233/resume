@@ -20,6 +20,7 @@ urlpatterns = [
     path("save_resume/", views.save_resume, name="save_resume"),
     path("delete_resume/", views.delete_resume, name="delete_resume"),
     path("responses/", views.responses, name="responses"),
+    path("metrics/", views.metrics, name="metrics"),
     path("applications/add/", views.add_application, name="add_application"),
     path("applications/delete/<int:app_id>/",
          views.delete_application, name="delete_application"),

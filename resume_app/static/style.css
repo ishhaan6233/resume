@@ -1035,3 +1035,52 @@ button.btn-outline, button.btn-secondary {
   color: var(--text) !important;
 }
 .settings-page .category-item .muted { color: var(--muted) !important; }
+
+/* Google Auth Button */
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  width: 95%;         
+  padding: 12px;      
+  border-radius: 8px;
+  margin-top: 15px;
+
+  background-color: #fff;
+  color: #3c4043;
+  font-size: 1rem;
+  font-weight: 600;     
+  border: 1px solid #dadce0;
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-google img {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-google:hover {
+  background-color: #f7f8f8;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.btn-google:active {
+  background-color: #eee;
+}
+
+
+/* Dark Mode Support */
+[data-theme="dark"] .google-btn {
+  background-color: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+[data-theme="dark"] .google-btn:hover {
+  background-color: #2d2d2d;
+}
